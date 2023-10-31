@@ -2,29 +2,11 @@ class World {
     canvas;
     ctx;
     keyboard;
+    level = level1;
     character = new Character();
-    enemies = [
-        new PufferFish(),
-        new PufferFish(),
-        new PufferFish(),
-    ];
-    backgroundObjects = [
-        new BackgroundObjects('img/3. Background/Layers/5. Water/L2.png', -719),
-        new BackgroundObjects('img/3. Background/Layers/1. Light/2.png', -719),
-        new BackgroundObjects('img/3. Background/Layers/4.Fondo 2/L2.png', -719),
-        new BackgroundObjects('img/3. Background/Layers/3.Fondo 1/L2.png', -719),
-        new BackgroundObjects('img/3. Background/Layers/2. Floor/L2.png', -719),
-        new BackgroundObjects('img/3. Background/Layers/5. Water/L1.png', 0),
-        new BackgroundObjects('img/3. Background/Layers/1. Light/1.png', 0),
-        new BackgroundObjects('img/3. Background/Layers/4.Fondo 2/L1.png', 0),
-        new BackgroundObjects('img/3. Background/Layers/3.Fondo 1/L1.png', 0),
-        new BackgroundObjects('img/3. Background/Layers/2. Floor/L1.png', 0),
-        new BackgroundObjects('img/3. Background/Layers/5. Water/L2.png', 719),
-        new BackgroundObjects('img/3. Background/Layers/1. Light/2.png', 719),
-        new BackgroundObjects('img/3. Background/Layers/4.Fondo 2/L2.png', 719),
-        new BackgroundObjects('img/3. Background/Layers/3.Fondo 1/L2.png', 719),
-        new BackgroundObjects('img/3. Background/Layers/2. Floor/L2.png', 719),
-    ];
+    enemies = level1.enemies;
+    backgroundObjects = level1.backgroundObjects;
+    camera_x = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -35,15 +17,18 @@ class World {
     }
 
     setWorld() {
-        this.enemies.world = this;
         this.character.world = this;
+        this.enemies.world = this;
     }
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.addObjectsToMap(this.backgroundObjects);
+
+        this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
-        this.addObjectsToMap(this.enemies);
+        this.addObjectsToMap(this.level.enemies);
+        this.ctx.translate(-this.camera_x, 0);
 
         let self = this;
         requestAnimationFrame(function () {
@@ -58,6 +43,27 @@ class World {
     }
 
     addToMap(mo) {
-        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
+        if (mo.otherDirection) {
+            this.flipImage(mo);
+        }
+        mo.draw(this.ctx);
+
+        mo.drawFrame(this.ctx);
+
+        if (mo.otherDirection) {
+            this.flipImageBack(mo);
+        }
+    }
+
+    flipImage(mo) {
+        this.ctx.save();
+        this.ctx.translate(mo.width, 0);
+        this.ctx.scale(-1, 1);
+        mo.x = mo.x * -1;
+    }
+
+    flipImageBack(mo) {
+        mo.x = mo.x * -1;
+        this.ctx.restore();
     }
 }

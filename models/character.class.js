@@ -1,9 +1,13 @@
 class Character extends MovableObject {
-    x = 50;
+    x = 0;
     y = 50;
     width = 300;
     height = 300;
     world;
+    speed_x = 0;
+    speed_y = 0;
+    speed_x_max = 10;
+    speed_y_max = 4;
 
     IMAGES_SWIM = [
         'img/1.Sharkie/3.Swim/2.png',
@@ -20,19 +24,47 @@ class Character extends MovableObject {
 
     animate() {
         setInterval(() => {
-            if (this.world.keyboard.RIGHT) {
-                let i = this.currentImage % this.IMAGES_SWIM.length;
-                let path = this.IMAGES_SWIM[i];
-                this.img = this.imageCache[path];
-                this.currentImage++;
-                this.moveRight();
-            } else if (this.world.keyboard.UP) {
-                this.moveUp();
-            } else if (this.world.keyboard.DOWN) {
-                this.moveDown();
-            } else if (this.world.keyboard.LEFT) {
-                this.moveLeft();
-            }
+            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_right) {
+                if (this.speed_x < this.speed_x_max) {
+                    this.applyWaterResistanceX();
+                    this.moveRight();
+                } else {
+                    this.moveRight();
+                }
+                this.otherDirection = false;
+            };
+            if (this.world.keyboard.LEFT && this.x > this.world.level.level_end_left) {
+                if (this.speed_x < this.speed_x_max) {
+                    this.applyWaterResistanceX();
+                    this.moveLeft();
+                } else {
+                    this.moveLeft();
+                }
+                this.otherDirection = true;
+            };
+            if (this.world.keyboard.UP && this.y > this.world.level.level_end_up) {
+                if (this.speed_y < this.speed_y_max) {
+                    this.applyWaterResistanceY();
+                    this.moveUp();
+                } else {
+                    this.moveUp();
+                }
+            };
+            if (this.world.keyboard.DOWN && this.y < this.world.level.level_end_down) {
+                if (this.speed_y < this.speed_y_max) {
+                    this.applyWaterResistanceY();
+                    this.moveDown();
+                } else {
+                    this.moveDown();
+                }
+            };
+            this.world.camera_x = -this.x + 50;
+        }, 1000 / 60);
+
+        setInterval(() => {
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN) {
+                this.playAnimation(this.IMAGES_SWIM);
+            };
         }, 200);
     }
 }

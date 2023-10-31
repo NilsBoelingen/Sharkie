@@ -4,8 +4,18 @@ class MovableObject {
     img;
     imageCache = {};
     currentImage = 0;
-    speed = 0.15;
-    world;
+    speed_x = 0.15;
+    speed_y = 0.15;
+    acceleration = 0.1;
+    otherDirection = false;
+
+    applyWaterResistanceX() {
+            this.speed_x += this.acceleration
+    };
+
+    applyWaterResistanceY() {
+            this.speed_y += this.acceleration
+    };
 
     loadImage(path) {
         this.img = new Image();
@@ -20,27 +30,38 @@ class MovableObject {
         });
     }
 
+    draw(ctx) {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    }
+
+    drawFrame(ctx) {
+        ctx.beginPath();
+        ctx.lineWidth = '4';
+        ctx.strokeStyle = 'blue';
+        ctx.rect(this.x, this.y, this.width, this.height);
+        ctx.stroke();
+    }
+
+    playAnimation(images) {
+        let i = this.currentImage % images.length;
+        let path = images[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+    }
+
     moveRight() {
-        setInterval(() => {
-            this.x += this.speed;
-        }, 1000 / 60);
+        this.x += this.speed_x;
     }
 
     moveLeft() {
-        setInterval(() => {
-            this.x -= this.speed;
-        }, 1000 / 60);
+        this.x -= this.speed_x;
     }
 
     moveUp() {
-        setInterval(() => {
-            this.y -= this.speed;
-        }, 1000 / 60);
+        this.y -= this.speed_y;
     }
 
     moveDown() {
-        setInterval(() => {
-            this.y += this.speed;
-        }, 1000 / 60);
+        this.y += this.speed_y;
     }
 }

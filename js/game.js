@@ -28,15 +28,19 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => {
     if (e.keyCode == 38) {
         keyboard.UP = false;
+        world.character.speed_y = 0;
     }
     if (e.keyCode == 40) {
         keyboard.DOWN = false;
+        world.character.speed_y = 0;
     }
     if (e.keyCode == 37) {
         keyboard.LEFT = false;
+        world.character.speed_x = 0;
     }
     if (e.keyCode == 39) {
         keyboard.RIGHT = false;
+        world.character.speed_x = 0;
     }
     if (e.keyCode == 32) {
         keyboard.SPACE = false;
