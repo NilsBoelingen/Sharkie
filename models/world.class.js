@@ -48,7 +48,8 @@ class World {
         }
         mo.draw(this.ctx);
 
-        mo.drawFrame(this.ctx);
+        mo.drawOuterFrame(this.ctx);
+        mo.drawInnerFrame(this.ctx);
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);

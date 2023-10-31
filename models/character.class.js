@@ -8,6 +8,12 @@ class Character extends MovableObject {
     speed_y = 0;
     speed_x_max = 10;
     speed_y_max = 4;
+    offset = {
+        top: 140,
+        bottom: 220,
+        left: 60,
+        right: 120,
+    };
 
     IMAGES_SWIM = [
         'img/1.Sharkie/3.Swim/2.png',

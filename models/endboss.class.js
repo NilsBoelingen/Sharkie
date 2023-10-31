@@ -2,6 +2,13 @@ class Endboss extends MovableObject {
     width = 450;
     height = 450;
     y = -40;
+    offset = {
+        top: 160,
+        bottom: 240,
+        left: 30,
+        right: 70,
+    };
+    
     IMAGES_SWIM = [
         'img/2.Enemy/3 Final Enemy/2.floating/1.png',
         'img/2.Enemy/3 Final Enemy/2.floating/2.png',

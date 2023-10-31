@@ -10,11 +10,11 @@ class MovableObject {
     otherDirection = false;
 
     applyWaterResistanceX() {
-            this.speed_x += this.acceleration
+        this.speed_x += this.acceleration
     };
 
     applyWaterResistanceY() {
-            this.speed_y += this.acceleration
+        this.speed_y += this.acceleration
     };
 
     loadImage(path) {
@@ -34,12 +34,28 @@ class MovableObject {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
 
-    drawFrame(ctx) {
-        ctx.beginPath();
-        ctx.lineWidth = '4';
-        ctx.strokeStyle = 'blue';
-        ctx.rect(this.x, this.y, this.width, this.height);
-        ctx.stroke();
+    drawOuterFrame(ctx) {
+        if (this.checkObjectMovable()) {
+            ctx.beginPath();
+            ctx.lineWidth = '4';
+            ctx.strokeStyle = 'blue';
+            ctx.rect(this.x, this.y, this.width, this.height);
+            ctx.stroke();
+        }
+    }
+
+    drawInnerFrame(ctx) {
+        if (this.checkObjectMovable()) {
+            ctx.beginPath();
+            ctx.lineWidth = '4';
+            ctx.strokeStyle = 'red';
+            ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.right, this.height - this.offset.bottom);
+            ctx.stroke();
+        }
+    }
+
+    checkObjectMovable() {
+        return this instanceof Character || this instanceof PufferFish || this instanceof Endboss;
     }
 
     playAnimation(images) {
@@ -64,4 +80,11 @@ class MovableObject {
     moveDown() {
         this.y += this.speed_y;
     }
+
+    isColliding (mo) {
+        return  (this.X + this.width - this.offset.right) >= (mo.X + mo.offset.left) && (this.X + this.offset.left) <= (mo.X + mo.width - mo.offset.right) && 
+                (this.Y + this.height - this.offset.bottom) >= (mo.Y + mo.offset.top) &&
+                (this.Y + this.offset.top) <= (mo.Y + mo.height - mo.offset.bottom) && 
+                // obj.onCollisionCourse;
+}
 }
