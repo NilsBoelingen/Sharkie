@@ -9,6 +9,7 @@ class PufferFish extends MovableObject {
         right: 10,
     };
     damage = 5;
+    energy = 100;
 
     IMAGES_SWIM_GREEN = [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png',
@@ -31,6 +32,17 @@ class PufferFish extends MovableObject {
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim4.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim5.png',
     ];
+    IMAGES_DEAD_PUFFER = [
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1-2.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1-3.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2-2.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2-3.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3-2.png',
+        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3-3.png',
+    ];
 
     constructor() {
         super().loadImage('img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png');
@@ -40,17 +52,37 @@ class PufferFish extends MovableObject {
         this.loadImages(this.IMAGES_SWIM_GREEN);
         this.loadImages(this.IMAGES_SWIM_ORANGE);
         this.loadImages(this.IMAGES_SWIM_RED);
-        this.animate();
+        // this.loadImages(this.IMAGES_DEAD_PUFFER);
+        this.animate(this.y);
     }
 
-    animate() {
+    animate(y) {
         let images = this.randomColor();
         setInterval(() => {
-            this.moveLeft();
+            if (this.isDead()) {
+                this.moveLeft();
+                this.speed_y = 2;
+                this.speed_x = 4;
+                if (y <= 180) {
+                    this.moveUp();
+                } else if (y > 180) {
+                    this.moveDown();
+                }
+            } else {
+                this.moveLeft();
+            }
         }, 1000 / 60);
 
         setInterval(() => {
-            this.playAnimation(images);
+            if (images == this.IMAGES_SWIM_GREEN && this.isDead()) {
+                this.loadImage(this.IMAGES_DEAD_PUFFER[1]);
+            } else if (images == this.IMAGES_SWIM_RED && this.isDead()) {
+                this.loadImage(this.IMAGES_DEAD_PUFFER[5]);
+            } else if (images == this.IMAGES_SWIM_ORANGE && this.isDead()) {
+                this.loadImage(this.IMAGES_DEAD_PUFFER[8]);
+            } else {
+                this.playAnimation(images);
+            }
         }, 100);
     }
 

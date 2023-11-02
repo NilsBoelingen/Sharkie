@@ -10,6 +10,7 @@ class MovableObject {
     otherDirection = false;
     energy = 100;
     damage = 0;
+    lastHitfromSuperDangerous = false;
 
     applyWaterResistanceX() {
         this.speed_x += this.acceleration
@@ -97,5 +98,33 @@ class MovableObject {
             this.y + this.height - this.offset.bottom >= mo.y + mo.offset.top &&
             this.y + this.offset.top <= mo.y + mo.height - mo.offset.bottom;
         // obj.onCollisionCourse;
+    }
+
+    characterGetHit(enemy) {
+        this.energy -= enemy.damage;
+        if (this.energy < 0) {
+            this.energy = 0;
+        }
+        if (enemy instanceof JellyFish && enemy.superDangerous) {
+            this.lastHitfromSuperDangerous = true;
+        } else {
+            this.lastHitfromSuperDangerous = false;
+        }
+    }
+
+    isDead() {
+        return this.energy == 0;
+    }
+
+    enemyGetHit(enemy) {
+        enemy.energy -= this.characterDamage(enemy);
+        if (enemy instanceof Endboss || enemy instanceof JellyFish) {
+            this.energy -= enemy.damage;
+        }
+        if (enemy instanceof JellyFish) {
+            enemy.superDangerous = true;
+            enemy.animate(enemy);
+            enemy.damage = 10;
+        }
     }
 }

@@ -21,19 +21,9 @@ class World {
         setInterval(() => {
             this.enemies.forEach((enemy) => {
                 if (this.character.isColliding(enemy) && !this.keyboard.SPACE) {
-                    this.character.energy -= enemy.damage;
-                    console.log(this.character.energy);
+                    this.character.characterGetHit(enemy);
                 } else if (this.character.isAttacking(enemy) && this.keyboard.SPACE) {
-                    enemy.energy -= this.character.characterDamage(enemy);
-                    if (enemy instanceof Endboss || enemy instanceof JellyFish) {
-                        this.character.energy -= enemy.damage;
-                    }
-                    if (enemy instanceof JellyFish) {
-                        enemy.superDangerous = true;
-                        enemy.animate();
-                        enemy.damage = 10;
-                    }
-                    console.log(enemy.energy);
+                    this.character.enemyGetHit(enemy);
                 }
             });
         }, 200);
