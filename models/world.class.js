@@ -13,7 +13,30 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.draw();
+        this.checkCollision();
         this.setWorld();
+    }
+
+    checkCollision() {
+        setInterval(() => {
+            this.enemies.forEach((enemy) => {
+                if (this.character.isColliding(enemy) && !this.keyboard.SPACE) {
+                    this.character.energy -= enemy.damage;
+                    console.log(this.character.energy);
+                } else if (this.character.isAttacking(enemy) && this.keyboard.SPACE) {
+                    enemy.energy -= this.character.characterDamage(enemy);
+                    if (enemy instanceof Endboss || enemy instanceof JellyFish) {
+                        this.character.energy -= enemy.damage;
+                    }
+                    if (enemy instanceof JellyFish) {
+                        enemy.superDangerous = true;
+                        enemy.animate();
+                        enemy.damage = 10;
+                    }
+                    console.log(enemy.energy);
+                }
+            });
+        }, 200);
     }
 
     setWorld() {

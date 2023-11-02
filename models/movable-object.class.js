@@ -8,6 +8,8 @@ class MovableObject {
     speed_y = 0.15;
     acceleration = 0.1;
     otherDirection = false;
+    energy = 100;
+    damage = 0;
 
     applyWaterResistanceX() {
         this.speed_x += this.acceleration
@@ -49,13 +51,13 @@ class MovableObject {
             ctx.beginPath();
             ctx.lineWidth = '4';
             ctx.strokeStyle = 'red';
-            ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.right, this.height - this.offset.bottom);
+            ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.right - this.offset.left, this.height - this.offset.bottom - this.offset.top);
             ctx.stroke();
         }
     }
 
     checkObjectMovable() {
-        return this instanceof Character || this instanceof PufferFish || this instanceof Endboss;
+        return this instanceof Character || this instanceof PufferFish || this instanceof Endboss || this instanceof JellyFish;
     }
 
     playAnimation(images) {
@@ -81,10 +83,19 @@ class MovableObject {
         this.y += this.speed_y;
     }
 
-    isColliding (mo) {
-        return  (this.X + this.width - this.offset.right) >= (mo.X + mo.offset.left) && (this.X + this.offset.left) <= (mo.X + mo.width - mo.offset.right) && 
-                (this.Y + this.height - this.offset.bottom) >= (mo.Y + mo.offset.top) &&
-                (this.Y + this.offset.top) <= (mo.Y + mo.height - mo.offset.bottom) && 
-                // obj.onCollisionCourse;
-}
+    isColliding(mo) {
+        return this.x + this.width - this.offset.right >= mo.x + mo.offset.left &&
+            this.x + this.offset.left <= mo.x + mo.width - mo.offset.right &&
+            this.y + this.height - this.offset.bottom >= mo.y + mo.offset.top &&
+            this.y + this.offset.top <= mo.y + mo.height - mo.offset.bottom;
+        // obj.onCollisionCourse;
+    }
+
+    isAttacking(mo) {
+        return this.x + this.width >= mo.x + mo.offset.left &&
+            this.x + this.offset.left <= mo.x + mo.width - mo.offset.right &&
+            this.y + this.height - this.offset.bottom >= mo.y + mo.offset.top &&
+            this.y + this.offset.top <= mo.y + mo.height - mo.offset.bottom;
+        // obj.onCollisionCourse;
+    }
 }
