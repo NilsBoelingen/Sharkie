@@ -15,6 +15,7 @@ class World {
     poisonBubbles = [];
     camera_x = 0;
     lastThrowTime = 0;
+    gameStarted = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -68,12 +69,14 @@ class World {
                 enemy.changeOffset(enemy);
             }
         })
+        // nachfragen. Wenn ein coin eingesammelt wird, wird ein beliebiger anderer aus dem Array entfernt und nicht der eingesammelte.
         this.coins.forEach((coin) => {
             if (this.character.isColliding(coin)) {
                 this.character.collectedCoins += 1;
                 this.coins.splice(coin, 1);
             }
         })
+        // nachfragen. gleiches wie bei den coins.
         this.poisons.forEach((poison) => {
             if (this.character.isColliding(poison)) {
                 this.character.collectedPoison += 1;
@@ -87,27 +90,33 @@ class World {
         this.enemies.forEach((enemy) => {
             enemy.world = this;
         })
+        this.bubbles.forEach((bubble) => {
+            bubble.world = this;
+        })
+        this.poisonBubbles.forEach((poisonBubble) => {
+            poisonBubble.world = this;
+        })
     }
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.bubbles);
-        this.addObjectsToMap(this.poisonBubbles);
-        this.addObjectsToMap(this.level.coins);
-        this.addObjectsToMap(this.level.poisons);
-        this.addObjectsToMap(this.level.enemies);
-        this.ctx.translate(-this.camera_x, 0);
+            this.ctx.translate(this.camera_x, 0);
+            this.addObjectsToMap(this.level.backgroundObjects);
+            this.addToMap(this.character);
+            this.addObjectsToMap(this.bubbles);
+            this.addObjectsToMap(this.poisonBubbles);
+            this.addObjectsToMap(this.level.coins);
+            this.addObjectsToMap(this.level.poisons);
+            this.addObjectsToMap(this.level.enemies);
+            this.ctx.translate(-this.camera_x, 0);
 
-        this.addToMap(this.statusBar);
-        this.addTextToMap(this.character.energy, 80, 60)
-        this.addToMap(this.coinBar);
-        this.addTextToMap(this.character.collectedCoins, 220, 60)
-        this.addToMap(this.poisonBar);
-        this.addTextToMap(this.character.collectedPoison, 310, 60)
+            this.addToMap(this.statusBar);
+            this.addTextToMap(this.character.energy, 80, 60)
+            this.addToMap(this.coinBar);
+            this.addTextToMap(this.character.collectedCoins, 220, 60)
+            this.addToMap(this.poisonBar);
+            this.addTextToMap(this.character.collectedPoison, 310, 60)
 
         let self = this;
         requestAnimationFrame(function () {
@@ -127,8 +136,9 @@ class World {
         }
         mo.draw(this.ctx);
 
-        mo.drawOuterFrame(this.ctx);
-        mo.drawInnerFrame(this.ctx);
+        // Only for developing.
+        // mo.drawOuterFrame(this.ctx);
+        // mo.drawInnerFrame(this.ctx);
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);

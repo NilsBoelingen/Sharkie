@@ -119,6 +119,7 @@ class Character extends MovableObject {
         setInterval(() => {
             this.checkHittedBy(i);
         }, 200);
+        // nachfragen. Animationen laufen nicht vernünftig
         setInterval(() => {
             if (this.world.keyboard.SPACE && !this.attackStatus) {
                     this.playAnimation(this.IMAGES_ATTACK);
@@ -126,13 +127,14 @@ class Character extends MovableObject {
             if (this.world.keyboard.D && !this.world.lastThrowTime) {
                     this.playAnimation(this.IMAGES_BLOW_BUBBLE);
                 setTimeout(() => {
-                    let bubble = new Bubble(this.x + 200, this.y + 120);
+                    let bubble = new Bubble(this.x + 200, this.y + 120, this.otherDirection);
                     this.world.bubbles.push(bubble);
                 }, 100);
                 this.world.lastThrowTime = new Date();
             }
-            if (this.world.keyboard.S && !this.world.lastThrowTime) {
+            if (this.world.keyboard.S && !this.world.lastThrowTime && this.collectedPoison) {
                 this.playAnimation(this.IMAGES_BLOW_POISON);
+                this.collectedPoison--;
                 setTimeout(() => {
                     let poisonBubble = new PoisonBubble(this.x + 200, this.y + 120);
                     this.world.poisonBubbles.push(poisonBubble);
@@ -197,6 +199,7 @@ class Character extends MovableObject {
             this.moveRight();
         }
         this.otherDirection = false;
+        this.world.bubbles.otherDirection = false;
     }
 
     checkMoveLeft() {
@@ -207,6 +210,7 @@ class Character extends MovableObject {
             this.moveLeft();
         }
         this.otherDirection = true;
+        this.world.bubbles.otherDirection = true;
     }
 
     checkMoveUp() {

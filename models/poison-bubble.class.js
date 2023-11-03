@@ -5,6 +5,7 @@ class PoisonBubble extends MovableObject {
     accelerationY = 0.1;
     speed_x = 12;
     speed_y = 0;
+    world;
     offset = {
         top: 0,
         bottom: 0,

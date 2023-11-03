@@ -82,6 +82,7 @@ class Endboss extends MovableObject {
     animate() {
         setInterval(() => {
             if (this.isDead()) {
+                this.speed_y = 0.8;
                 setTimeout(() => {
                     this.moveUp();
                 }, 200);
