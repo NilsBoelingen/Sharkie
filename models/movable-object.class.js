@@ -1,16 +1,12 @@
-class MovableObject {
-    x = 120;
-    y = 400;
-    img;
-    imageCache = {};
-    currentImage = 0;
+class MovableObject extends DrawableObject {
     speed_x = 0.15;
     speed_y = 0.15;
     acceleration = 0.1;
-    otherDirection = false;
     energy = 100;
     damage = 0;
     lastHitfromSuperDangerous = false;
+    lastHitPoison = 0;
+    lastHitShock = 0;
 
     applyWaterResistanceX() {
         this.speed_x += this.acceleration
@@ -19,47 +15,6 @@ class MovableObject {
     applyWaterResistanceY() {
         this.speed_y += this.acceleration
     };
-
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-    }
-
-    loadImages(array) {
-        array.forEach((path) => {
-            let img = new Image();
-            img.src = path;
-            this.imageCache[path] = img;
-        });
-    }
-
-    draw(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-    }
-
-    drawOuterFrame(ctx) {
-        if (this.checkObjectMovable()) {
-            ctx.beginPath();
-            ctx.lineWidth = '4';
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
-            ctx.stroke();
-        }
-    }
-
-    drawInnerFrame(ctx) {
-        if (this.checkObjectMovable()) {
-            ctx.beginPath();
-            ctx.lineWidth = '4';
-            ctx.strokeStyle = 'red';
-            ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.right - this.offset.left, this.height - this.offset.bottom - this.offset.top);
-            ctx.stroke();
-        }
-    }
-
-    checkObjectMovable() {
-        return this instanceof Character || this instanceof PufferFish || this instanceof Endboss || this instanceof JellyFish;
-    }
 
     playAnimation(images) {
         let i = this.currentImage % images.length;
@@ -107,9 +62,26 @@ class MovableObject {
         }
         if (enemy instanceof JellyFish && enemy.superDangerous) {
             this.lastHitfromSuperDangerous = true;
+            this.lastHitShock = new Date().getTime();
+        } else if (enemy instanceof JellyFish && !enemy.superDangerous){
+            this.lastHitfromSuperDangerous = false;
+            this.lastHitShock = new Date().getTime();
         } else {
             this.lastHitfromSuperDangerous = false;
+            this.lastHitPoison = new Date().getTime();
         }
+    }
+
+    isHurtShock() {
+        let timepast = new Date().getTime() - this.lastHitShock;
+        timepast = timepast / 1000;
+        return timepast < 1;
+    }
+
+    isHurtPoison() {
+        let timepast = new Date().getTime() - this.lastHitPoison;
+        timepast = timepast / 1000;
+        return timepast < 1;
     }
 
     isDead() {
@@ -123,7 +95,7 @@ class MovableObject {
         }
         if (enemy instanceof JellyFish) {
             enemy.superDangerous = true;
-            enemy.animate(enemy);
+            enemy.animate();
             enemy.damage = 10;
         }
     }

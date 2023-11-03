@@ -6,27 +6,39 @@ class World {
     character = new Character();
     enemies = level1.enemies;
     backgroundObjects = level1.backgroundObjects;
+    statusBar = new StatusBar();
+    poisonBar = new PoisonBar();
+    coinBar = new CoinBar();
+    bubble = [];
+    poisonBubble = [];
     camera_x = 0;
+    lastThrowTime = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.ctx.font = 'bold 40px Arial';
+        this.ctx.fillStyle = 'white';
         this.draw();
-        this.checkCollision();
+        this.run();
         this.setWorld();
     }
 
-    checkCollision() {
+    run() {
         setInterval(() => {
-            this.enemies.forEach((enemy) => {
-                if (this.character.isColliding(enemy) && !this.keyboard.SPACE) {
-                    this.character.characterGetHit(enemy);
-                } else if (this.character.isAttacking(enemy) && this.keyboard.SPACE) {
-                    this.character.enemyGetHit(enemy);
-                }
-            });
+            this.checkCollisions();
         }, 200);
+    }
+
+    checkCollisions() {
+        this.enemies.forEach((enemy) => {
+            if (this.character.isColliding(enemy) && !this.keyboard.SPACE) {
+                this.character.characterGetHit(enemy);
+            } else if (this.character.isAttacking(enemy) && this.keyboard.SPACE) {
+                this.character.enemyGetHit(enemy);
+            }
+        });
     }
 
     setWorld() {
@@ -40,8 +52,17 @@ class World {
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
+        this.addObjectsToMap(this.bubble);
+        this.addObjectsToMap(this.poisonBubble);
         this.addObjectsToMap(this.level.enemies);
         this.ctx.translate(-this.camera_x, 0);
+
+        this.addToMap(this.statusBar);
+        this.addTextToMap(this.character.energy, 80, 60)
+        this.addToMap(this.coinBar);
+        this.addTextToMap(this.character.collectedCoins, 220, 60)
+        this.addToMap(this.poisonBar);
+        this.addTextToMap(this.character.collectedPoison, 310, 60)
 
         let self = this;
         requestAnimationFrame(function () {
@@ -67,6 +88,10 @@ class World {
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
+    }
+
+    addTextToMap(text, x, y) {
+        this.ctx.fillText(text, x, y);
     }
 
     flipImage(mo) {

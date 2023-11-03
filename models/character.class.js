@@ -15,6 +15,8 @@ class Character extends MovableObject {
         right: 60,
     };
     attackStatus = false;
+    collectedCoins = 0;
+    collectedPoison = 0;
 
     IMAGES_SWIM = [
         'img/1.Sharkie/3.Swim/2.png',
@@ -29,6 +31,28 @@ class Character extends MovableObject {
         'img/1.Sharkie/4.Attack/Fin slap/6.png',
         'img/1.Sharkie/4.Attack/Fin slap/7.png',
         'img/1.Sharkie/4.Attack/Fin slap/8.png',
+    ];
+
+    IMAGES_BLOW_BUBBLE = [
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/1.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/2.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/3.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/4.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/5.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/6.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/7.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
+    ];
+
+    IMAGES_BLOW_POISON = [
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/1.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/2.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/3.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/4.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/5.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/6.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/7.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/8.png',
     ];
 
     IMAGES_DEAD = [
@@ -59,12 +83,29 @@ class Character extends MovableObject {
         'img/1.Sharkie/6.dead/2.Electro_shock/10.png',
     ];
 
+    IMAGES_HURT_POISON = [
+        'img/1.Sharkie/5.Hurt/1.Poisoned/2.png',
+        'img/1.Sharkie/5.Hurt/1.Poisoned/3.png',
+        'img/1.Sharkie/5.Hurt/1.Poisoned/4.png',
+        'img/1.Sharkie/5.Hurt/1.Poisoned/5.png',
+    ];
+
+    IMAGES_HURT_SHOCK = [
+        'img/1.Sharkie/5.Hurt/2.Electric shock/o1.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/o2.png',
+    ];
+    count = 0;
+
     constructor() {
         super().loadImage('img/1.Sharkie/3.Swim/1.png');
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_DEAD_BY_SHOCK);
+        this.loadImages(this.IMAGES_HURT_POISON);
+        this.loadImages(this.IMAGES_HURT_SHOCK);
+        this.loadImages(this.IMAGES_BLOW_BUBBLE);
+        this.loadImages(this.IMAGES_BLOW_POISON);
         this.animate();
     }
 
@@ -75,18 +116,28 @@ class Character extends MovableObject {
         }, 1000 / 60);
 
         setInterval(() => {
-            if (this.isDead() && this.lastHitfromSuperDangerous) {
-                this.playAnimation(this.IMAGES_DEAD_BY_SHOCK);
-            } else if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-            } else if (this.checkKeyDownToMove()) {
-                this.playAnimation(this.IMAGES_SWIM);
-            };
+            this.checkHittedBy();
         }, 200);
         setInterval(() => {
             if (this.world.keyboard.SPACE && !this.attackStatus) {
                 this.playAnimation(this.IMAGES_ATTACK);
-            } 
+            };
+            if (this.world.keyboard.D && !this.world.lastThrowTime) {
+                    this.playAnimation(this.IMAGES_BLOW_BUBBLE);
+                    setTimeout(() => {
+                        let bubble = new Bubble(this.x + 200, this.y + 120);
+                        this.world.bubble.push(bubble);
+                    }, 200);
+                    this.world.lastThrowTime = new Date();
+            }
+            if (this.world.keyboard.S && !this.world.lastThrowTime) {
+                this.playAnimation(this.IMAGES_BLOW_POISON);
+                setTimeout(() => {
+                    let poisonBubble = new PoisonBubble(this.x + 200, this.y + 120);
+                    this.world.poisonBubble.push(poisonBubble);
+                }, 200);
+                this.world.lastThrowTime = new Date();
+        }
         }, 100);
     }
 
@@ -95,6 +146,20 @@ class Character extends MovableObject {
             return 100;
         } else if (enemy instanceof JellyFish || enemy instanceof Endboss) {
             return 0;
+        };
+    }
+
+    checkHittedBy() {
+        if (this.isDead() && this.lastHitfromSuperDangerous) {
+            this.playAnimation(this.IMAGES_DEAD_BY_SHOCK);
+        } else if (this.isDead() && !this.lastHitfromSuperDangerous) {
+            this.playAnimation(this.IMAGES_DEAD);
+        } else if (this.isHurtPoison()) {
+            this.playAnimation(this.IMAGES_HURT_POISON);
+        } else if (this.isHurtShock()) {
+            this.playAnimation(this.IMAGES_HURT_SHOCK);
+        } else if (this.checkKeyDownToMove()) {
+            this.playAnimation(this.IMAGES_SWIM);
         };
     }
 

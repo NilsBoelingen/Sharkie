@@ -33,14 +33,8 @@ class PufferFish extends MovableObject {
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim5.png',
     ];
     IMAGES_DEAD_PUFFER = [
-        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1-2.png',
-        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1-3.png',
-        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
-        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2-2.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2-3.png',
-        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3.png',
-        'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3-2.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3-3.png',
     ];
 
@@ -75,11 +69,11 @@ class PufferFish extends MovableObject {
 
         setInterval(() => {
             if (images == this.IMAGES_SWIM_GREEN && this.isDead()) {
-                this.loadImage(this.IMAGES_DEAD_PUFFER[1]);
+                this.loadImage(this.IMAGES_DEAD_PUFFER[0]);
             } else if (images == this.IMAGES_SWIM_RED && this.isDead()) {
-                this.loadImage(this.IMAGES_DEAD_PUFFER[5]);
+                this.loadImage(this.IMAGES_DEAD_PUFFER[2]);
             } else if (images == this.IMAGES_SWIM_ORANGE && this.isDead()) {
-                this.loadImage(this.IMAGES_DEAD_PUFFER[8]);
+                this.loadImage(this.IMAGES_DEAD_PUFFER[1]);
             } else {
                 this.playAnimation(images);
             }

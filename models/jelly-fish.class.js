@@ -17,7 +17,7 @@ class JellyFish extends MovableObject {
         'img/2.Enemy/2 Jelly fish/Regular damage/Lila 3.png',
         'img/2.Enemy/2 Jelly fish/Regular damage/Lila 4.png',
     ];
-    IMAGES_SWIM_RED = [
+    IMAGES_SWIM_YELLOW = [
         'img/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png',
         'img/2.Enemy/2 Jelly fish/Regular damage/Yellow 2.png',
         'img/2.Enemy/2 Jelly fish/Regular damage/Yellow 3.png',
@@ -42,7 +42,7 @@ class JellyFish extends MovableObject {
         this.y = 5 + Math.random() * 300;
         this.speed = 0.15 + Math.random() * 0.5;
         this.loadImages(this.IMAGES_SWIM_LILA);
-        this.loadImages(this.IMAGES_SWIM_RED);
+        this.loadImages(this.IMAGES_SWIM_YELLOW);
         this.loadImages(this.IMAGES_SWIM_GREEN);
         this.loadImages(this.IMAGES_SWIM_PINK);
         this.animate();
@@ -55,24 +55,24 @@ class JellyFish extends MovableObject {
         }, 1000 / 60);
 
         setInterval(() => {
-            this.playAnimation(images);
+            if (!this.superDangerous) {
+                this.playAnimation(images);
+            } else if (this.superDangerous) {
+                if (images == this.IMAGES_SWIM_LILA) {
+                    this.playAnimation(this.IMAGES_SWIM_PINK);
+                } else if (images == this.IMAGES_SWIM_YELLOW) {
+                    this.playAnimation(this.IMAGES_SWIM_GREEN);
+                }
+            }
         }, 100);
     }
 
     randomColor() {
         let i = Math.random() * 2;
-        if (!this.superDangerous) {
-            if (i <= 1) {
-                return this.IMAGES_SWIM_LILA;
-            } else if (i > 1) {
-                return this.IMAGES_SWIM_RED;
-            };
-        } else if (this.superDangerous) {
-            if (i <= 1) {
-                return this.IMAGES_SWIM_GREEN;
-            } else if (i > 1) {
-                return this.IMAGES_SWIM_PINK;
-            };
-        }
+        if (i <= 1) {
+            return this.IMAGES_SWIM_LILA;
+        } else if (i > 1) {
+            return this.IMAGES_SWIM_YELLOW;
+        };
     }
 }
