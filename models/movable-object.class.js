@@ -16,13 +16,6 @@ class MovableObject extends DrawableObject {
         this.speed_y += this.acceleration
     };
 
-    playAnimation(images) {
-        let i = this.currentImage % images.length;
-        let path = images[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
-    }
-
     moveRight() {
         this.x += this.speed_x;
     }

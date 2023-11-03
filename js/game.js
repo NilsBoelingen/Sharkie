@@ -64,3 +64,13 @@ window.addEventListener('keyup', (e) => {
         world.lastThrowTime = 0;
     }
 });
+
+window.addEventListener("click", (e) => {
+    keyboard.LEFT_CLICK = true;
+    keyboard.MOUSE_POSITION.splice(0, 2);
+    keyboard.MOUSE_POSITION.push(e.x - e.target.offsetLeft);
+    keyboard.MOUSE_POSITION.push(e.y - e.target.offsetTop);
+    setTimeout(() => {
+        keyboard.LEFT_CLICK = false;
+    }, 500);
+}, false);

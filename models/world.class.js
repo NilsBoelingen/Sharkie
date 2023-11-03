@@ -2,6 +2,8 @@ class World {
     canvas;
     ctx;
     keyboard;
+    startScreen = new StartScreen();
+    startButton = new StartButton();
     level = level1;
     character = new Character();
     enemies = level1.enemies;
@@ -31,7 +33,21 @@ class World {
     run() {
         setInterval(() => {
             this.checkCollisions();
+            this.checkMouse();
         }, 200);
+    }
+
+    checkMouse() {
+        if (this.checkMouseClickCollision()) {
+            this.gameStarted = true;
+        }
+    }
+
+    checkMouseClickCollision() {
+        return this.keyboard.MOUSE_POSITION[0] > this.startButton.x &&
+        this.keyboard.MOUSE_POSITION[0] < this.startButton.x + this.startButton.width &&
+        this.keyboard.MOUSE_POSITION[1] > this.startButton.y &&
+        this.keyboard.MOUSE_POSITION[1] < this.startButton.y + this.startButton.height;
     }
 
     checkCollisions() {
@@ -101,6 +117,13 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        if (!this.gameStarted) {
+            this.addToMap(this.startScreen);
+            this.addTextToMap('SHARKIE', 400, 320)
+            this.addTextToMap('THE GAME', 385, 370)
+            this.addToMap(this.startButton);
+        } else if (this.gameStarted) {
+
             this.ctx.translate(this.camera_x, 0);
             this.addObjectsToMap(this.level.backgroundObjects);
             this.addToMap(this.character);
@@ -117,11 +140,12 @@ class World {
             this.addTextToMap(this.character.collectedCoins, 220, 60)
             this.addToMap(this.poisonBar);
             this.addTextToMap(this.character.collectedPoison, 310, 60)
-
-        let self = this;
-        requestAnimationFrame(function () {
-            self.draw();
-        });
+        }
+            
+            let self = this;
+            requestAnimationFrame(function () {
+                self.draw();
+            });
     }
 
     addObjectsToMap(objects) {

@@ -6,4 +6,6 @@ class Keyboard {
     SPACE = false;
     S = false;
     D = false;
+    LEFT_CLICK = false;
+    MOUSE_POSITION = [];
 }
