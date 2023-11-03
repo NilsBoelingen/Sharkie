@@ -110,34 +110,35 @@ class Character extends MovableObject {
     }
 
     animate(enemy) {
+        let i = 0;
         setInterval(() => {
             this.checkMovingDirection();
             this.world.camera_x = -this.x + 50;
         }, 1000 / 60);
 
         setInterval(() => {
-            this.checkHittedBy();
+            this.checkHittedBy(i);
         }, 200);
         setInterval(() => {
             if (this.world.keyboard.SPACE && !this.attackStatus) {
-                this.playAnimation(this.IMAGES_ATTACK);
+                    this.playAnimation(this.IMAGES_ATTACK);
             };
             if (this.world.keyboard.D && !this.world.lastThrowTime) {
                     this.playAnimation(this.IMAGES_BLOW_BUBBLE);
-                    setTimeout(() => {
-                        let bubble = new Bubble(this.x + 200, this.y + 120);
-                        this.world.bubble.push(bubble);
-                    }, 200);
-                    this.world.lastThrowTime = new Date();
+                setTimeout(() => {
+                    let bubble = new Bubble(this.x + 200, this.y + 120);
+                    this.world.bubbles.push(bubble);
+                }, 100);
+                this.world.lastThrowTime = new Date();
             }
             if (this.world.keyboard.S && !this.world.lastThrowTime) {
                 this.playAnimation(this.IMAGES_BLOW_POISON);
                 setTimeout(() => {
                     let poisonBubble = new PoisonBubble(this.x + 200, this.y + 120);
-                    this.world.poisonBubble.push(poisonBubble);
+                    this.world.poisonBubbles.push(poisonBubble);
                 }, 200);
                 this.world.lastThrowTime = new Date();
-        }
+            }
         }, 100);
     }
 
@@ -149,15 +150,21 @@ class Character extends MovableObject {
         };
     }
 
-    checkHittedBy() {
+    checkHittedBy(i) {
         if (this.isDead() && this.lastHitfromSuperDangerous) {
             this.playAnimation(this.IMAGES_DEAD_BY_SHOCK);
         } else if (this.isDead() && !this.lastHitfromSuperDangerous) {
             this.playAnimation(this.IMAGES_DEAD);
         } else if (this.isHurtPoison()) {
-            this.playAnimation(this.IMAGES_HURT_POISON);
+            if (i < 4) {
+                this.playAnimation(this.IMAGES_HURT_POISON);
+            };
+            i++
         } else if (this.isHurtShock()) {
-            this.playAnimation(this.IMAGES_HURT_SHOCK);
+            if (i < 4) {
+                this.playAnimation(this.IMAGES_HURT_SHOCK);
+            };
+            i++
         } else if (this.checkKeyDownToMove()) {
             this.playAnimation(this.IMAGES_SWIM);
         };

@@ -12,6 +12,7 @@ class PoisonBubble extends MovableObject {
         right: 0,
     };
     IMAGE = 'img/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png';
+    damage = 10;
 
     constructor(x, y) {
         super().loadImage(this.IMAGE);

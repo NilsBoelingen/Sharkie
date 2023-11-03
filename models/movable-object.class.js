@@ -99,4 +99,11 @@ class MovableObject extends DrawableObject {
             enemy.damage = 10;
         }
     }
+
+    changeOffset(enemy) {
+            enemy.offset.top = enemy.height / 2;
+            enemy.offset.bottom = enemy.height / 2;
+            enemy.offset.left = enemy.width / 2;
+            enemy.offset.right = enemy.width / 2;
+    }
 }

@@ -6,11 +6,13 @@ class World {
     character = new Character();
     enemies = level1.enemies;
     backgroundObjects = level1.backgroundObjects;
+    coins = level1.coins;
+    poisons = level1.poisons;
     statusBar = new StatusBar();
     poisonBar = new PoisonBar();
     coinBar = new CoinBar();
-    bubble = [];
-    poisonBubble = [];
+    bubbles = [];
+    poisonBubbles = [];
     camera_x = 0;
     lastThrowTime = 0;
 
@@ -39,11 +41,52 @@ class World {
                 this.character.enemyGetHit(enemy);
             }
         });
+        this.enemies.forEach((enemy) => {
+            this.bubbles.forEach((bubble) => {
+                if (enemy.isColliding(bubble) && enemy instanceof JellyFish) {
+                    enemy.energy = 0;
+                    enemy.animate();
+                    this.bubbles.splice(bubble, 1);
+                }
+            })
+        })
+        this.enemies.forEach((enemy) => {
+            this.poisonBubbles.forEach((poisonBubble) => {
+                if (enemy.isColliding(poisonBubble) && enemy instanceof Endboss) {
+                    if (enemy.energy <= 0) {
+                        enemy.energy = 0;
+                    } else {
+                        enemy.lastHit = new Date().getTime();
+                        enemy.energy -= poisonBubble.damage;
+                        this.poisonBubbles.splice(poisonBubble, 1);
+                    };
+                }
+            })
+        })
+        this.enemies.forEach((enemy) => {
+            if (enemy.isDead()) {
+                enemy.changeOffset(enemy);
+            }
+        })
+        this.coins.forEach((coin) => {
+            if (this.character.isColliding(coin)) {
+                this.character.collectedCoins += 1;
+                this.coins.splice(coin, 1);
+            }
+        })
+        this.poisons.forEach((poison) => {
+            if (this.character.isColliding(poison)) {
+                this.character.collectedPoison += 1;
+                this.poisons.splice(poison, 1);
+            }
+        })
     }
 
     setWorld() {
         this.character.world = this;
-        this.enemies.world = this;
+        this.enemies.forEach((enemy) => {
+            enemy.world = this;
+        })
     }
 
     draw() {
@@ -52,8 +95,10 @@ class World {
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
-        this.addObjectsToMap(this.bubble);
-        this.addObjectsToMap(this.poisonBubble);
+        this.addObjectsToMap(this.bubbles);
+        this.addObjectsToMap(this.poisonBubbles);
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.poisons);
         this.addObjectsToMap(this.level.enemies);
         this.ctx.translate(-this.camera_x, 0);
 
