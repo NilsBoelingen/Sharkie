@@ -13,6 +13,7 @@ class World {
     statusBar = new StatusBar();
     poisonBar = new PoisonBar();
     coinBar = new CoinBar();
+    endScreenLose = new EndScreenLose();
     bubbles = [];
     poisonBubbles = [];
     camera_x = 0;
@@ -31,15 +32,22 @@ class World {
     }
 
     run() {
-        setInterval(() => {
+        setStopableInterval(() => {
             this.checkCollisions();
-            this.checkMouse();
         }, 200);
+        setInterval(() => {
+            this.checkMouse();
+        }, 10);
     }
 
     checkMouse() {
-        if (this.checkMouseClickCollision()) {
+        if (this.checkMouseClickCollision() && this.keyboard.LEFT_CLICK) {
             this.gameStarted = true;
+        }
+        if (this.checkMouseClickCollision() && !this.keyboard.LEFT_CLICK && !this.gameStarted) {
+            this.canvas.style.cursor = "pointer";
+        } else {
+            this.canvas.style.cursor = "auto";
         }
     }
 
@@ -112,6 +120,9 @@ class World {
         this.poisonBubbles.forEach((poisonBubble) => {
             poisonBubble.world = this;
         })
+        this.poisonBubbles.forEach((enemies) => {
+            enemies.world = this;
+        })
     }
 
     draw() {
@@ -135,11 +146,14 @@ class World {
             this.ctx.translate(-this.camera_x, 0);
 
             this.addToMap(this.statusBar);
-            this.addTextToMap(this.character.energy, 80, 60)
+            this.addTextToMap(this.character.energy, 80, 60);
             this.addToMap(this.coinBar);
-            this.addTextToMap(this.character.collectedCoins, 220, 60)
+            this.addTextToMap(this.character.collectedCoins, 220, 60);
             this.addToMap(this.poisonBar);
-            this.addTextToMap(this.character.collectedPoison, 310, 60)
+            this.addTextToMap(this.character.collectedPoison, 310, 60);
+            //weiter überprüfen
+        } else if (this.character.isDead) {
+            this.addToMap(this.endScreenLose);
         }
             
             let self = this;
@@ -185,3 +199,4 @@ class World {
         this.ctx.restore();
     }
 }
+

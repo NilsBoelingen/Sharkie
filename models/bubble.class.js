@@ -20,18 +20,20 @@ class Bubble extends MovableObject {
         this.y = y;
         this.blow(otherDirection);
     }
-    // nachfragen bubbles gehen immer nach rechts, auch wenn otherDirection true
+
     blow(otherDirection) {
+        if (otherDirection) {
+            this.x -= 200;
+        }
         setInterval(() => {
-            console.log(otherDirection);
-            if (this.speed_x > 0 && otherDirection) {
+            if (this.speed_x > 0 && !otherDirection) {
                 this.moveRight();
                 this.speed_x -= this.accelerationX;
                 setTimeout(() => {
                     this.moveUp();
                     this.speed_y += this.accelerationY;
                 }, 100);
-            } else if (this.speed_x <= 0 && otherDirection) {
+            } else if (this.speed_x <= 0 && !otherDirection) {
                 this.moveUp();
                 this.speed_y += this.accelerationY;
             } else if (this.speed_x > 0 && otherDirection) {

@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+intervallIds = [];
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -74,3 +75,14 @@ window.addEventListener("click", (e) => {
         keyboard.LEFT_CLICK = false;
     }, 500);
 }, false);
+
+window.addEventListener("mousemove", (e) => {
+    keyboard.MOUSE_POSITION.splice(0, 2);
+    keyboard.MOUSE_POSITION.push(e.clientX - e.target.getBoundingClientRect().left);
+    keyboard.MOUSE_POSITION.push(e.clientY - e.target.getBoundingClientRect().top);
+});
+
+function setStopableInterval(fn, time) {
+    let id = setInterval(fn, time);
+    intervallIds.push(id);
+}
