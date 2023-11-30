@@ -14,11 +14,15 @@ class World {
     poisonBar = new PoisonBar();
     coinBar = new CoinBar();
     endScreenLose = new EndScreenLose();
+    endScreenWin = new EndScreenWin();
+    retryButton = new RetryButton();
     bubbles = [];
     poisonBubbles = [];
     camera_x = 0;
     lastThrowTime = 0;
     gameStarted = false;
+    gameOver = false;
+    winGame = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -41,21 +45,23 @@ class World {
     }
 
     checkMouse() {
-        if (this.checkMouseClickCollision() && this.keyboard.LEFT_CLICK) {
+        if (this.checkMouseClickCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver) {
             this.gameStarted = true;
+        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver) {
+            location.reload();
         }
-        if (this.checkMouseClickCollision() && !this.keyboard.LEFT_CLICK && !this.gameStarted) {
+        if (this.checkMouseClickCollision(this.startButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted || this.checkMouseClickCollision(this.retryButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted) {
             this.canvas.style.cursor = "pointer";
         } else {
             this.canvas.style.cursor = "auto";
         }
     }
 
-    checkMouseClickCollision() {
-        return this.keyboard.MOUSE_POSITION[0] > this.startButton.x &&
-        this.keyboard.MOUSE_POSITION[0] < this.startButton.x + this.startButton.width &&
-        this.keyboard.MOUSE_POSITION[1] > this.startButton.y &&
-        this.keyboard.MOUSE_POSITION[1] < this.startButton.y + this.startButton.height;
+    checkMouseClickCollision(target) {
+        return this.keyboard.MOUSE_POSITION[0] > target.x &&
+            this.keyboard.MOUSE_POSITION[0] < target.x + target.width &&
+            this.keyboard.MOUSE_POSITION[1] > target.y &&
+            this.keyboard.MOUSE_POSITION[1] < target.y + target.height;
     }
 
     checkCollisions() {
@@ -128,12 +134,24 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        if (!this.gameStarted) {
+        if (!this.gameStarted && !this.gameOver) {
             this.addToMap(this.startScreen);
             this.addTextToMap('SHARKIE', 400, 320)
             this.addTextToMap('THE GAME', 385, 370)
             this.addToMap(this.startButton);
-        } else if (this.gameStarted) {
+        } else if (this.character.isDead()) {
+            this.gameOver = true;
+            this.gameStarted = false;
+            this.addObjectsToMap(this.level.backgroundObjects);
+            this.addToMap(this.endScreenLose);
+            this.addToMap(this.retryButton);
+        }else if (this.winGame) {
+            this.gameOver = true;
+            this.gameStarted = false;
+            this.addObjectsToMap(this.level.backgroundObjects);
+            this.addToMap(this.endScreenWin);
+            this.addToMap(this.retryButton);
+        } else if (this.gameStarted && !this.gameOver) {
 
             this.ctx.translate(this.camera_x, 0);
             this.addObjectsToMap(this.level.backgroundObjects);
@@ -151,15 +169,12 @@ class World {
             this.addTextToMap(this.character.collectedCoins, 220, 60);
             this.addToMap(this.poisonBar);
             this.addTextToMap(this.character.collectedPoison, 310, 60);
-            //weiter überprüfen
-        } else if (this.character.isDead) {
-            this.addToMap(this.endScreenLose);
         }
-            
-            let self = this;
-            requestAnimationFrame(function () {
-                self.draw();
-            });
+
+        let self = this;
+        requestAnimationFrame(function () {
+            self.draw();
+        });
     }
 
     addObjectsToMap(objects) {

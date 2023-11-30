@@ -10,10 +10,10 @@ class EndScreenLose extends DrawableObject {
     constructor() {
         super();
         this.loadImages(this.IMAGES_LOSE);
-        this.width = 300;
+        this.width = 450;
         this.height = 100;
-        this.x = 210;
-        this.y = 140;
+        this.x = 135;
+        this.y = 150;
         this.animate();
     }
 

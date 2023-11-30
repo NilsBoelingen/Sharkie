@@ -1,39 +1,74 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Sharkie</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src="./models/drawable-object.class.js"></script>  
-    <script src="./models/movable-object.class.js"></script>
-    <script src="./models/character.class.js"></script>
-    <script src="./models/puffer-fish.class.js"></script>
-    <script src="./models/status-bar.class.js"></script>
-    <script src="./models/coin-bar.class.js"></script>
-    <script src="./models/poison-bar.class.js"></script>
-    <script src="./models/world.class.js"></script>
-    <script src="./models/background-objects.class.js"></script>
-    <script src="./models/keyboard.class.js"></script>
-    <script src="./models/level.class.js"></script>
-    <script src="./models/endboss.class.js"></script>
-    <script src="./models/jelly-fish.class.js"></script>
-    <script src="./models/coin.class.js"></script>
-    <script src="./models/poison.class.js"></script>
-    <script src="./models/bubble.class.js"></script>
-    <script src="./models/poison-bubble.class.js"></script>
-    <script src="./levels/level1.js"></script>
-    <script src="./models/start-screen.class.js"></script>
-    <script src="./models/start-button.class.js"></script>
-    <script src="./models/end-screen-lose.class.js"></script>
-    <script src='./js/game.js'></script>
-</head>
-<body onload="init()">
-    <h1>Sharkie - The Game</h1>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Sharkie</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+        <link rel="stylesheet" href="./fonts.css">
+        <script src="./models/drawable-object.class.js"></script>
+        <script src="./models/movable-object.class.js"></script>
+        <script src="./models/character.class.js"></script>
+        <script src="./models/puffer-fish.class.js"></script>
+        <script src="./models/status-bar.class.js"></script>
+        <script src="./models/coin-bar.class.js"></script>
+        <script src="./models/poison-bar.class.js"></script>
+        <script src="./models/world.class.js"></script>
+        <script src="./models/background-objects.class.js"></script>
+        <script src="./models/keyboard.class.js"></script>
+        <script src="./models/level.class.js"></script>
+        <script src="./models/endboss.class.js"></script>
+        <script src="./models/jelly-fish.class.js"></script>
+        <script src="./models/coin.class.js"></script>
+        <script src="./models/poison.class.js"></script>
+        <script src="./models/bubble.class.js"></script>
+        <script src="./models/poison-bubble.class.js"></script>
+        <script src="./levels/level1.js"></script>
+        <script src="./models/start-screen.class.js"></script>
+        <script src="./models/start-button.class.js"></script>
+        <script src="./models/end-screen-lose.class.js"></script>
+        <script src="./models/retry-button.class.js"></script>
+        <script src="./models/end-screen-win.class.js"></script>
+        <script src='./js/game.js'></script>
+    </head>
+    <body onload="init()">
+        <h1>Sharkie - The Game</h1>
 
-    <canvas height="480" width="720" id="canvas"></canvas>
+        <canvas height="480" width="720" id="canvas"></canvas>
 
-    <!-- <img src="img/6.Botones/Start/1.png" id="startButton"> -->
-</body>
+        <div class="instructions-container">
+            <div class="arrow-keys-container">
+                <div class="arrow-keys">
+                    <div class="upper-arrow">
+                        <div class="arrow-outer-line">
+                            <div class="arrow-inner-line">
+                                <div class="triangle-up"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="other-arrows">
+                        <div class="arrow-outer-line">
+                            <div class="arrow-inner-line">
+                                <div class="triangle-left"></div>
+                            </div>
+                        </div>
+                        <div class="arrow-outer-line">
+                            <div class="arrow-inner-line">
+                                <div class="triangle-down"></div>
+                            </div>
+                        </div>
+                        <div class="arrow-outer-line">
+                            <div class="arrow-inner-line">
+                                <div class="triangle-right"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="instrction-text">
+
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

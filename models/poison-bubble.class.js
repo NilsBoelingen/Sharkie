@@ -15,23 +15,52 @@ class PoisonBubble extends MovableObject {
     IMAGE = 'img/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png';
     damage = 10;
 
-    constructor(x, y) {
+    constructor(x, y, otherDirection) {
         super().loadImage(this.IMAGE);
         this.x = x;
         this.y = y;
-        this.blow();
+        this.blow(otherDirection);
     }
 
-    blow(x, y) {
+    // blow(x, y) {
+    //     setInterval(() => {
+    //         if (this.speed_x > 0) {
+    //             this.moveRight();
+    //             this.speed_x -= this.accelerationX;
+    //             setTimeout(() => {
+    //                 this.moveUp();
+    //                 this.speed_y += this.accelerationY;
+    //             }, 80);
+    //         } else if (this.speed_x <= 0) {
+    //             this.moveUp();
+    //             this.speed_y += this.accelerationY;
+    //         }
+    //     }, 1000 / 60);
+    // }
+
+    blow(otherDirection) {
+        if (otherDirection) {
+            this.x -= 200;
+        }
         setInterval(() => {
-            if (this.speed_x > 0) {
+            if (this.speed_x > 0 && !otherDirection) {
                 this.moveRight();
                 this.speed_x -= this.accelerationX;
                 setTimeout(() => {
                     this.moveUp();
                     this.speed_y += this.accelerationY;
-                }, 80);
-            } else if (this.speed_x <= 0) {
+                }, 100);
+            } else if (this.speed_x <= 0 && !otherDirection) {
+                this.moveUp();
+                this.speed_y += this.accelerationY;
+            } else if (this.speed_x > 0 && otherDirection) {
+                this.moveLeft();
+                this.speed_x -= this.accelerationX;
+                setTimeout(() => {
+                    this.moveUp();
+                    this.speed_y += this.accelerationY;
+                }, 100);
+            } else if (this.speed_x <= 0 && otherDirection) {
                 this.moveUp();
                 this.speed_y += this.accelerationY;
             }
