@@ -37,6 +37,7 @@ h3 {
 
 canvas {
     background-color: white;
+    display: block;
 } 
 
 .instructions-container {
@@ -156,6 +157,9 @@ canvas {
     h1 {
         display: none;
     }
+    .instructions-container {
+        display: none;
+    }
 }
 
 @media only screen and (max-height: 480px) {
@@ -163,6 +167,9 @@ canvas {
         height: 100vh;
     }
     h1 {
+        display: none;
+    }
+    .instructions-container {
         display: none;
     }
 }

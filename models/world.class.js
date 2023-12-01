@@ -65,6 +65,10 @@ class World {
     }
 
     checkCollisions() {
+        let i = 0;
+        let j = 0;
+        let k = 0;
+        let l = 0;
         this.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy) && !this.keyboard.SPACE) {
                 this.character.characterGetHit(enemy);
@@ -73,15 +77,18 @@ class World {
             }
         });
         this.enemies.forEach((enemy) => {
+            k = 0;
             this.bubbles.forEach((bubble) => {
                 if (enemy.isColliding(bubble) && enemy instanceof JellyFish) {
                     enemy.energy = 0;
+                    this.bubbles.splice(k, 1);
                     enemy.animate();
-                    this.bubbles.splice(bubble, 1);
                 }
+                k++;
             })
         })
         this.enemies.forEach((enemy) => {
+            l = 0;
             this.poisonBubbles.forEach((poisonBubble) => {
                 if (enemy.isColliding(poisonBubble) && enemy instanceof Endboss) {
                     if (enemy.energy <= 0) {
@@ -89,9 +96,10 @@ class World {
                     } else {
                         enemy.lastHit = new Date().getTime();
                         enemy.energy -= poisonBubble.damage;
-                        this.poisonBubbles.splice(poisonBubble, 1);
+                        this.poisonBubbles.splice(l, 1);
                     };
                 }
+                l++;
             })
         })
         this.enemies.forEach((enemy) => {
@@ -99,19 +107,19 @@ class World {
                 enemy.changeOffset(enemy);
             }
         })
-        // nachfragen. Wenn ein coin eingesammelt wird, wird ein beliebiger anderer aus dem Array entfernt und nicht der eingesammelte.
         this.coins.forEach((coin) => {
             if (this.character.isColliding(coin)) {
                 this.character.collectedCoins += 1;
-                this.coins.splice(coin, 1);
+                this.coins.splice(i, 1);
             }
+            i++;
         })
-        // nachfragen. gleiches wie bei den coins.
         this.poisons.forEach((poison) => {
             if (this.character.isColliding(poison)) {
                 this.character.collectedPoison += 1;
-                this.poisons.splice(poison, 1);
+                this.poisons.splice(j, 1);
             }
+            j++;
         })
     }
 
@@ -141,17 +149,21 @@ class World {
             this.addToMap(this.startButton);
         } else if (this.character.isDead()) {
             this.gameOver = true;
-            this.gameStarted = false;
-            this.addObjectsToMap(this.level.backgroundObjects);
-            this.addToMap(this.endScreenLose);
-            this.addToMap(this.retryButton);
-        }else if (this.winGame) {
+            if (this.gameOver && !this.gameStarted) {
+                setTimeout(() => {
+                    this.gameStarted = false;
+                    this.addObjectsToMap(this.level.backgroundObjects);
+                    this.addToMap(this.endScreenLose);
+                    this.addToMap(this.retryButton);
+                }, 500);
+            }
+        } else if (this.winGame) {
             this.gameOver = true;
             this.gameStarted = false;
             this.addObjectsToMap(this.level.backgroundObjects);
             this.addToMap(this.endScreenWin);
             this.addToMap(this.retryButton);
-        } else if (this.gameStarted && !this.gameOver) {
+        } else if (this.gameStarted) {
 
             this.ctx.translate(this.camera_x, 0);
             this.addObjectsToMap(this.level.backgroundObjects);

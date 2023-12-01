@@ -127,7 +127,7 @@ class JellyFish extends MovableObject {
             this.playAnimation(this.IMAGES_DEAD_PINK);
         } else if (images == this.IMAGES_SWIM_YELLOW) {
             this.playAnimation(this.IMAGES_DEAD_YELLOW);
-        }; 
+        };
     }
 
     checkJellyFishType(images) {

@@ -17,6 +17,7 @@ class Character extends MovableObject {
     attackStatus = false;
     collectedCoins = 0;
     collectedPoison = 0;
+    interval;
 
     IMAGES_SWIM = [
         'img/1.Sharkie/3.Swim/2.png',
@@ -119,26 +120,52 @@ class Character extends MovableObject {
         setInterval(() => {
             this.checkHittedBy(i);
         }, 200);
-        // nachfragen. Animationen laufen nicht vernünftig
         setInterval(() => {
             if (this.world.keyboard.SPACE && !this.attackStatus) {
-                    this.playAnimation(this.IMAGES_ATTACK);
+                this.attackStatus = true;
+                if (this.attackStatus) {
+                    this.interval = setInterval(() => {
+                        this.playAnimation(this.IMAGES_ATTACK);
+                    }, 100);
+                }
+                setTimeout(() => {
+                    this.attackStatus = false;
+                    clearInterval(this.interval);
+                }, 600);
             };
             if (this.world.keyboard.D && !this.world.lastThrowTime) {
-                    this.playAnimation(this.IMAGES_BLOW_BUBBLE);
+                this.attackStatus = true;
+                if (this.attackStatus) {
+                    this.interval = setInterval(() => {
+                        this.playAnimation(this.IMAGES_BLOW_BUBBLE);
+                    }, 100);
+                    setTimeout(() => {
+                        this.attackStatus = false;
+                        clearInterval(this.interval);
+                    }, 800);
+                }
                 setTimeout(() => {
                     let bubble = new Bubble(this.x + 200, this.y + 120, this.otherDirection);
                     this.world.bubbles.push(bubble);
-                }, 100);
+                }, 700);
                 this.world.lastThrowTime = new Date();
             }
             if (this.world.keyboard.S && !this.world.lastThrowTime && this.collectedPoison) {
-                this.playAnimation(this.IMAGES_BLOW_POISON);
+                this.attackStatus = true;
+                if (this.attackStatus) {
+                    this.interval = setInterval(() => {
+                        this.playAnimation(this.IMAGES_BLOW_POISON);
+                    }, 100);
+                    setTimeout(() => {
+                        this.attackStatus = false;
+                        clearInterval(this.interval);
+                    }, 800);
+                }
                 this.collectedPoison--;
                 setTimeout(() => {
-                    let poisonBubble = new PoisonBubble(this.x + 200, this.y + 120);
+                    let poisonBubble = new PoisonBubble(this.x + 200, this.y + 120, this.otherDirection);
                     this.world.poisonBubbles.push(poisonBubble);
-                }, 200);
+                }, 700);
                 this.world.lastThrowTime = new Date();
             }
         }, 100);
