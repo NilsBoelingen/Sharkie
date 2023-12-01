@@ -13,11 +13,11 @@ class World {
     statusBar = new StatusBar();
     poisonBar = new PoisonBar();
     coinBar = new CoinBar();
+    bubbles = [];
+    poisonBubbles = [];
     endScreenLose = new EndScreenLose();
     endScreenWin = new EndScreenWin();
     retryButton = new RetryButton();
-    bubbles = [];
-    poisonBubbles = [];
     camera_x = 0;
     lastThrowTime = 0;
     gameStarted = false;
@@ -45,9 +45,9 @@ class World {
     }
 
     checkMouse() {
-        if (this.checkMouseClickCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver) {
+        if (this.checkMouseClickCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver && !this.winGame) {
             this.gameStarted = true;
-        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver) {
+        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver || this.winGame) {
             location.reload();
         }
         if (this.checkMouseClickCollision(this.startButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted || this.checkMouseClickCollision(this.retryButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted) {
@@ -142,24 +142,16 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        if (!this.gameStarted && !this.gameOver) {
+        if (!this.gameStarted && !this.gameOver && !this.winGame) {
             this.addToMap(this.startScreen);
             this.addTextToMap('SHARKIE', 400, 320)
             this.addTextToMap('THE GAME', 385, 370)
             this.addToMap(this.startButton);
-        } else if (this.character.isDead()) {
-            this.gameOver = true;
-            if (this.gameOver && !this.gameStarted) {
-                setTimeout(() => {
-                    this.gameStarted = false;
-                    this.addObjectsToMap(this.level.backgroundObjects);
-                    this.addToMap(this.endScreenLose);
-                    this.addToMap(this.retryButton);
-                }, 500);
-            }
+        } else if (this.gameOver) {
+            this.addObjectsToMap(this.level.backgroundObjects);
+            this.addToMap(this.endScreenLose);
+            this.addToMap(this.retryButton);
         } else if (this.winGame) {
-            this.gameOver = true;
-            this.gameStarted = false;
             this.addObjectsToMap(this.level.backgroundObjects);
             this.addToMap(this.endScreenWin);
             this.addToMap(this.retryButton);

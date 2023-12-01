@@ -18,6 +18,8 @@ class Character extends MovableObject {
     collectedCoins = 0;
     collectedPoison = 0;
     interval;
+    hittedBy = false;
+    deadBy = false;
 
     IMAGES_SWIM = [
         'img/1.Sharkie/3.Swim/2.png',
@@ -111,16 +113,15 @@ class Character extends MovableObject {
     }
 
     animate(enemy) {
-        let i = 0;
-        setInterval(() => {
+        let intervalMove = setInterval(() => {
             this.checkMovingDirection();
             this.world.camera_x = -this.x + 50;
         }, 1000 / 60);
 
         setInterval(() => {
-            this.checkHittedBy(i);
+            this.checkHittedBy();
         }, 200);
-        setInterval(() => {
+        let intervalAttack = setInterval(() => {
             if (this.world.keyboard.SPACE && !this.attackStatus) {
                 this.attackStatus = true;
                 if (this.attackStatus) {
@@ -169,6 +170,70 @@ class Character extends MovableObject {
                 this.world.lastThrowTime = new Date();
             }
         }, 100);
+        let interval1 = setInterval(() => {
+            if (this.deadBy == 'shock' && !this.hittedBy) {
+                clearInterval(interval1);
+                clearInterval(intervalMove);
+                clearInterval(intervalAttack);
+                let interval = setInterval(() => {
+                    this.playAnimation(this.IMAGES_DEAD_BY_SHOCK);
+                }, 100);
+                setTimeout(() => {
+                    clearInterval(interval);
+                }, 1000);
+                setTimeout(() => {
+                    this.world.gameStarted = false;
+                    this.world.gameOver = true;
+                }, 2000);
+            } else if (this.deadBy == 'poison' && !this.hittedBy) {
+                clearInterval(interval1);
+                clearInterval(intervalMove);
+                clearInterval(intervalAttack);
+                let interval = setInterval(() => {
+                    this.playAnimation(this.IMAGES_DEAD);
+                }, 115);
+                setTimeout(() => {
+                    clearInterval(interval);
+                }, 1200);
+                setTimeout(() => {
+                    this.world.gameStarted = false;
+                    this.world.gameOver = true;
+                }, 2000);
+            } else if (this.hittedBy == 'poison' && !this.deadBy) {
+                let interval = setInterval(() => {
+                    this.playAnimation(this.IMAGES_HURT_POISON);
+                }, 200);
+                setTimeout(() => {
+                    clearInterval(interval);
+                    this.hittedBy = false;
+                }, 800);
+            } else if (this.hittedBy == 'shock' && !this.deadBy) {
+                let interval = setInterval(() => {
+                    this.playAnimation(this.IMAGES_HURT_SHOCK);
+                }, 200);
+                setTimeout(() => {
+                    clearInterval(interval);
+                    this.hittedBy = false;
+                }, 800);
+            }
+        }, 100);
+        setInterval(() => {
+            if (this.checkKeyDownToMove() && !this.deadBy && !this.hittedBy) {
+                this.playAnimation(this.IMAGES_SWIM);
+            };
+        }, 200);
+    }
+
+    checkWinGame() {
+        setInterval(() => {
+            this.world.enemies.forEach((enemy) => {
+                if (this instanceof Endboss && this.isDead())
+                setTimeout(() => {
+                    this.world.gameStarted = false;
+                    this.world.winGame = true;
+                }, 2000);
+            })
+        }, 100);
     }
 
     characterDamage(enemy) {
@@ -179,24 +244,16 @@ class Character extends MovableObject {
         };
     }
 
-    checkHittedBy(i) {
+    checkHittedBy() {
         if (this.isDead() && this.lastHitfromSuperDangerous) {
-            this.playAnimation(this.IMAGES_DEAD_BY_SHOCK);
+            this.deadBy = 'shock';
         } else if (this.isDead() && !this.lastHitfromSuperDangerous) {
-            this.playAnimation(this.IMAGES_DEAD);
+            this.deadBy = 'poison';
         } else if (this.isHurtPoison()) {
-            if (i < 4) {
-                this.playAnimation(this.IMAGES_HURT_POISON);
-            };
-            i++
+            this.hittedBy = 'poison';
         } else if (this.isHurtShock()) {
-            if (i < 4) {
-                this.playAnimation(this.IMAGES_HURT_SHOCK);
-            };
-            i++
-        } else if (this.checkKeyDownToMove()) {
-            this.playAnimation(this.IMAGES_SWIM);
-        };
+            this.hittedBy = 'shock';
+        }
     }
 
     checkKeyDownToMove() {
