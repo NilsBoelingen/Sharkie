@@ -21,7 +21,9 @@ class MovableObject extends DrawableObject {
     }
 
     moveLeft() {
+        if (this.world.gameStarted) {
         this.x -= this.speed_x;
+        }
     }
 
     moveUp() {

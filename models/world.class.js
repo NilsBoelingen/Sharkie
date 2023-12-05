@@ -23,6 +23,8 @@ class World {
     gameStarted = false;
     gameOver = false;
     winGame = false;
+    game_musik = new Audio('audio/game_musik.mp3');
+    intro_musik = new Audio('audio/intro.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -147,6 +149,9 @@ class World {
             this.addTextToMap('SHARKIE', 400, 320)
             this.addTextToMap('THE GAME', 385, 370)
             this.addToMap(this.startButton);
+            this.intro_musik.play();
+            this.intro_musik.volume = 0.3;
+            this.intro_musik.loop = true;
         } else if (this.gameOver) {
             this.addObjectsToMap(this.level.backgroundObjects);
             this.addToMap(this.endScreenLose);
