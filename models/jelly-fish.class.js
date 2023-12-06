@@ -88,7 +88,9 @@ class JellyFish extends MovableObject {
     animate() {
         let images = this.randomColor();
         setInterval(() => {
-            this.moveLeft();
+            if (this.checkGameStarted()) {
+                this.moveLeft();
+            }
         }, 1000 / 60);
 
         setInterval(() => {

@@ -127,6 +127,7 @@ class World {
 
     setWorld() {
         this.character.world = this;
+        this.level.world = this;
         this.enemies.forEach((enemy) => {
             enemy.world = this;
         })
@@ -135,9 +136,6 @@ class World {
         })
         this.poisonBubbles.forEach((poisonBubble) => {
             poisonBubble.world = this;
-        })
-        this.poisonBubbles.forEach((enemies) => {
-            enemies.world = this;
         })
     }
 

@@ -1,11 +1,11 @@
 let level1 = new Level(
     [
-        new PufferFish(),
-        new PufferFish(),
-        new PufferFish(),
-        new JellyFish(),
-        new JellyFish(),
-        new JellyFish(),
+        new PufferFish(this.world),
+        new PufferFish(this.world),
+        new PufferFish(this.world),
+        new JellyFish(this.world),
+        new JellyFish(this.world),
+        new JellyFish(this.world),
         new Endboss(),
     ],
     [

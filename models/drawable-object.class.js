@@ -57,4 +57,11 @@ class DrawableObject {
     checkObjectMovable() {
         return this instanceof Character || this instanceof PufferFish || this instanceof Endboss || this instanceof JellyFish || this instanceof Bubble || this instanceof PoisonBubble || this instanceof Coin || this instanceof Poison;
     }
+
+    checkGameStarted() {
+        try {
+            return this.world.gameStarted;
+        } catch (e) {
+        }
+    }
 }

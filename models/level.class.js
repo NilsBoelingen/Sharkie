@@ -3,6 +3,7 @@ class Level {
     backgroundObjects;
     coins;
     poisons;
+    world;
     level_end_left = -200;
     level_end_right = 5000;
     level_end_up = -140;

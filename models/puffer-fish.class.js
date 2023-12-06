@@ -63,7 +63,9 @@ class PufferFish extends MovableObject {
                     this.moveDown();
                 }
             } else {
-                this.moveLeft();
+                if (this.checkGameStarted()) {
+                    this.moveLeft();
+                }
             }
         }, 1000 / 60);
 
