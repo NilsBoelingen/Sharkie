@@ -150,6 +150,56 @@ canvas {
     gap: 16px;
 }
 
+main {
+    display: flex;
+    height: fit-content;
+    width: fit-content;
+    position: relative;
+}
+
+.hud-main-conainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.top-container {
+    display: flex;
+    justify-content: end;
+}
+
+.bottom-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.arrow-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hud-main-conainer img {
+    height: 80px;
+    width: 80px;
+}
+
+.d-none {
+    display: none;
+}
+
+@media (max-width: 1030px) {
+    .bottom-container {
+        display: flex;
+    }
+}
+
 @media only screen and (max-width: 720px) {
     canvas {
         width: 100%;

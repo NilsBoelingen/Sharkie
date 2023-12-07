@@ -34,8 +34,33 @@
     </head>
     <body onload="init()">
         <h1>Sharkie - The Game</h1>
+        <main>
+            <canvas height="480" width="720" id="canvas"></canvas>
 
-        <canvas height="480" width="720" id="canvas"></canvas>
+            <div class="hud-main-conainer" id="hud">
+                <div class="top-container">
+                    <img src="./img/hud/musik_on.png" alt>
+                    <img src="./img/hud/fullscreen.png" alt>
+                </div>
+                <div class="bottom-container">
+                    <div class="arrow-container">
+                        <div>
+                            <img src="./img/hud/arrow_up.png" alt>
+                        </div>
+                        <div>
+                            <img src="./img/hud/arrow_left.png" alt>
+                            <img src="./img/hud/arrow_down.png" alt>
+                            <img src="./img/hud/arrow_right.png" alt>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="./img/hud/poison_bubble_attack.png" alt="">
+                        <img src="./img/hud/bubble_attack.png" alt="">
+                        <img src="./img/hud/attack.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </main>
 
         <div class="instructions-container">
             <div class="arrow-keys-container">
@@ -45,8 +70,12 @@
                             <div class="inner-line">
                                 <div class="triangle-up">
                                     <?xml version="1.0" encoding="utf-8"?>
-                                    <svg viewBox="105.896 76.028 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
-                                        <path d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
+                                    <svg viewBox="105.896 76.028 24 24"
+                                        width="20" height="20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:bx="https://boxy-svg.com">
+                                        <path
+                                            d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
                                             style="fill: rgb(83, 26, 130);"
                                             transform="matrix(1, 0, 0, 1, 3.552713678800501e-15, 3.552713678800501e-15)"
                                             bx:shape="triangle 105.896 76.028 24 24 0.5 0 1@6251486b" />
@@ -60,8 +89,12 @@
                             <div class="inner-line">
                                 <div class="triangle-left">
                                     <?xml version="1.0" encoding="utf-8"?>
-                                    <svg viewBox="105.896 76.028 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
-                                        <path d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
+                                    <svg viewBox="105.896 76.028 24 24"
+                                        width="20" height="20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:bx="https://boxy-svg.com">
+                                        <path
+                                            d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
                                             style="fill: rgb(83, 26, 130);"
                                             transform="matrix(1, 0, 0, 1, 3.552713678800501e-15, 3.552713678800501e-15)"
                                             bx:shape="triangle 105.896 76.028 24 24 0.5 0 1@6251486b" />
@@ -73,8 +106,12 @@
                             <div class="inner-line">
                                 <div class="triangle-down">
                                     <?xml version="1.0" encoding="utf-8"?>
-                                    <svg viewBox="105.896 76.028 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
-                                        <path d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
+                                    <svg viewBox="105.896 76.028 24 24"
+                                        width="20" height="20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:bx="https://boxy-svg.com">
+                                        <path
+                                            d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
                                             style="fill: rgb(83, 26, 130);"
                                             transform="matrix(1, 0, 0, 1, 3.552713678800501e-15, 3.552713678800501e-15)"
                                             bx:shape="triangle 105.896 76.028 24 24 0.5 0 1@6251486b" />
@@ -86,8 +123,12 @@
                             <div class="inner-line">
                                 <div class="triangle-right">
                                     <?xml version="1.0" encoding="utf-8"?>
-                                    <svg viewBox="105.896 76.028 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
-                                        <path d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
+                                    <svg viewBox="105.896 76.028 24 24"
+                                        width="20" height="20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:bx="https://boxy-svg.com">
+                                        <path
+                                            d="M 117.896 76.028 L 129.896 100.028 L 105.896 100.028 L 117.896 76.028 Z"
                                             style="fill: rgb(83, 26, 130);"
                                             transform="matrix(1, 0, 0, 1, 3.552713678800501e-15, 3.552713678800501e-15)"
                                             bx:shape="triangle 105.896 76.028 24 24 0.5 0 1@6251486b" />
