@@ -10,23 +10,23 @@ class Keyboard {
     MOUSE_POSITION = [];
 
     constructor() {
-        this.bindTouchBtns()
+        // this.bindTouchBtns()
     }
 
-    bindTouchBtns() {
-        let muteButton = document.getElementById('muteButton');
-        muteButton.addEventListener('touchstart', (e) => {
-            preventDefault();
-            muteGameMusik();
-        })
+    // bindTouchBtns() {
+    //     let muteButton = document.getElementById('muteButton');
+    //     muteButton.addEventListener('touchstart', (e) => {
+    //         preventDefault();
+    //         muteGameMusik();
+    //     })
 
-        document.getElementById('upBtn').addEventListener('touchstart', (e) => {
-            preventDefault();
-            this.UP = true;
-        })
-        document.getElementById('upBtn').addEventListener('touchend', (e) => {
-            preventDefault();
-            this.UP = false;
-        })
-    }
+    //     document.getElementById('upBtn').addEventListener('touchstart', (e) => {
+    //         preventDefault();
+    //         this.UP = true;
+    //     })
+    //     document.getElementById('upBtn').addEventListener('touchend', (e) => {
+    //         preventDefault();
+    //         this.UP = false;
+    //     })
+    // }
 }

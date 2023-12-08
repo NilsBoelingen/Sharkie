@@ -26,6 +26,8 @@ class World {
     game_musik = new Audio('audio/game_musik.mp3');
     intro_musik = new Audio('audio/intro.mp3');
     muteMusik = false;
+    touchX = 0;
+    touchY = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -46,13 +48,16 @@ class World {
         }, 200);
         setInterval(() => {
             this.checkMouse();
+            this.checkTouch()
         }, 10);
     }
 
     checkMouse() {
         if (this.checkMouseClickCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver && !this.winGame) {
             this.gameStarted = true;
-        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver || this.winGame) {
+        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver && !this.winGame) {
+            location.reload();
+        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && !this.gameOver && this.winGame) {
             location.reload();
         }
         if (this.checkMouseClickCollision(this.startButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted || this.checkMouseClickCollision(this.retryButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted) {
@@ -62,11 +67,28 @@ class World {
         }
     }
 
+    checkTouch() {
+        if (this.checkTouchCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver && !this.winGame) {
+            this.gameStarted = true;
+        } else if (this.checkTouchCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver && !this.winGame) {
+            location.reload();
+        } else if (this.checkTouchCollision(this.retryButton) && this.keyboard.LEFT_CLICK && !this.gameOver && this.winGame) {
+            location.reload();
+        }
+    }
+
     checkMouseClickCollision(target) {
         return this.keyboard.MOUSE_POSITION[0] > target.x &&
             this.keyboard.MOUSE_POSITION[0] < target.x + target.width &&
             this.keyboard.MOUSE_POSITION[1] > target.y &&
             this.keyboard.MOUSE_POSITION[1] < target.y + target.height;
+    }
+
+    checkTouchCollision(target) {
+        return this.touchX > target.x &&
+        this.touchX < target.x + target.width &&
+        this.touchY > target.y &&
+        this.touchY < target.y + target.height;
     }
 
     checkCollisions() {
@@ -224,27 +246,39 @@ class World {
     playMusik() {
         setInterval(() => {
             if (!this.gameStarted && !this.muteMusik) {
-                this.game_musik.pause();
-                this.intro_musik.play();
-                this.intro_musik.volume = 0.3;
-                this.intro_musik.loop = true;
+                this.playIntroMusik();
             } else if (this.gameStarted && !this.muteMusik) {
-                this.intro_musik.pause();
-                this.game_musik.play();
-                this.game_musik.volume = 0.3;
-                this.game_musik.loop = true;
+                this.playGameMusik();
             } else if (this.muteMusik) {
-                this.game_musik.pause();
-                this.intro_musik.pause();
+                this.muteAllMusik();
             }
         }, 100);
+    }
+
+    playIntroMusik() {
+        this.game_musik.pause();
+        this.intro_musik.play();
+        this.intro_musik.volume = 0.3;
+        this.intro_musik.loop = true;
+    }
+
+    playGameMusik() {
+        this.intro_musik.pause();
+        this.game_musik.play();
+        this.game_musik.volume = 0.3;
+        this.game_musik.loop = true;
+    }
+
+    muteAllMusik() {
+        this.game_musik.pause();
+        this.intro_musik.pause();
     }
 
     showTouchButtons() {
         let arrowsButtons = document.getElementById('arrowsButtons');
         let attackButtons = document.getElementById('attackButtons');
         setInterval(() => {
-            if (window.innerWidth <= 1030) {
+            if (navigator.maxTouchPoints >= 1) {
                 if (this.gameStarted) {
                     arrowsButtons.classList.remove('d-none');
                     attackButtons.classList.remove('d-none');

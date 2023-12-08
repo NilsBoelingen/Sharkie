@@ -7,6 +7,23 @@
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
         <link rel="stylesheet" href="./fonts.css">
+        <link rel="apple-touch-icon" sizes="57x57" href="./favicon/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="./favicon/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="./favicon/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="./favicon/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="./favicon/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="./favicon/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="./favicon/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="./favicon/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="./favicon/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="./favicon/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png">
+        <link rel="manifest" href="/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
         <script src="./models/drawable-object.class.js"></script>
         <script src="./models/movable-object.class.js"></script>
         <script src="./models/character.class.js"></script>
@@ -44,18 +61,18 @@
             </div>
             <div class="arrow-container d-none" id="arrowsButtons">
                 <div>
-                    <img src="./img/hud/arrow_up.png" id="upBtn" alt>
+                    <img src="./img/hud/arrow_up.png" id="upBtn" ontouchstart="touchUptStart()" ontouchend="touchUpEnd()">
                 </div>
                 <div>
-                    <img src="./img/hud/arrow_left.png" id="leftBtn" alt>
-                    <img src="./img/hud/arrow_down.png" id="downBtn" alt>
-                    <img src="./img/hud/arrow_right.png" id="rightBtn" alt>
+                    <img src="./img/hud/arrow_left.png" id="leftBtn" ontouchstart="touchLeftStart()" ontouchend="touchLeftEnd()">
+                    <img src="./img/hud/arrow_down.png" id="downBtn" ontouchstart="touchDownStart()" ontouchend="touchDownEnd()">
+                    <img src="./img/hud/arrow_right.png" id="rightBtn" ontouchstart="touchRightStart()" ontouchend="touchRightEnd()">
                 </div>
             </div>
             <div class="attack-container d-none" id="attackButtons">
-                <img src="./img/hud/poison_bubble_attack.png" id="poisonBtn" alt>
-                <img src="./img/hud/bubble_attack.png" id="bubbleBtn" alt>
-                <img src="./img/hud/attack.png" id="attackBtn" alt>
+                <img src="./img/hud/poison_bubble_attack.png" id="poisonBtn" ontouchstart="touchSStart()" ontouchend="touchSEnd()">
+                <img src="./img/hud/bubble_attack.png" id="bubbleBtn" ontouchstart="touchDStart()" ontouchend="touchDEnd()">
+                <img src="./img/hud/attack.png" id="attackBtn" ontouchstart="touchSpaceStart()" ontouchend="touchSpaceEnd()">
             </div>
         </main>
 
