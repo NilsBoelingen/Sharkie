@@ -8,6 +8,17 @@ function init() {
     world = new World(canvas, keyboard);
 }
 
+function muteGameMusik() {
+    let muteButton = document.getElementById('muteButton');
+    if (!world.muteMusik) {
+        world.muteMusik = true;
+        muteButton.src = 'img/hud/musik_off.png';
+    } else if (world.muteMusik) {
+        world.muteMusik = false;
+        muteButton.src = 'img/hud/musik_on.png';
+    }
+}
+
 function clearAllIntervals() {
     for (let i = 1; i < 9999; i++) window.clearInterval(i);
 }

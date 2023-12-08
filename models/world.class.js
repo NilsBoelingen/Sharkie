@@ -25,6 +25,7 @@ class World {
     winGame = false;
     game_musik = new Audio('audio/game_musik.mp3');
     intro_musik = new Audio('audio/intro.mp3');
+    muteMusik = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -35,6 +36,8 @@ class World {
         this.draw();
         this.run();
         this.setWorld();
+        this.playMusik();
+        this.showTouchButtons();
     }
 
     run() {
@@ -147,9 +150,6 @@ class World {
             this.addTextToMap('SHARKIE', 400, 320)
             this.addTextToMap('THE GAME', 385, 370)
             this.addToMap(this.startButton);
-            this.intro_musik.play();
-            this.intro_musik.volume = 0.3;
-            this.intro_musik.loop = true;
         } else if (this.gameOver) {
             this.addObjectsToMap(this.level.backgroundObjects);
             this.addToMap(this.endScreenLose);
@@ -219,6 +219,41 @@ class World {
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
+    }
+
+    playMusik() {
+        setInterval(() => {
+            if (!this.gameStarted && !this.muteMusik) {
+                this.game_musik.pause();
+                this.intro_musik.play();
+                this.intro_musik.volume = 0.3;
+                this.intro_musik.loop = true;
+            } else if (this.gameStarted && !this.muteMusik) {
+                this.intro_musik.pause();
+                this.game_musik.play();
+                this.game_musik.volume = 0.3;
+                this.game_musik.loop = true;
+            } else if (this.muteMusik) {
+                this.game_musik.pause();
+                this.intro_musik.pause();
+            }
+        }, 100);
+    }
+
+    showTouchButtons() {
+        let arrowsButtons = document.getElementById('arrowsButtons');
+        let attackButtons = document.getElementById('attackButtons');
+        setInterval(() => {
+            if (window.innerWidth <= 1030) {
+                if (this.gameStarted) {
+                    arrowsButtons.classList.remove('d-none');
+                    attackButtons.classList.remove('d-none');
+                } 
+            } else {
+                arrowsButtons.classList.add('d-none');
+                attackButtons.classList.add('d-none');
+            }
+        }, 100);
     }
 }
 

@@ -157,24 +157,14 @@ main {
     position: relative;
 }
 
-.hud-main-conainer {
+.top-container {
     position: absolute;
     top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.top-container {
-    display: flex;
-    justify-content: end;
+    right: 0;
 }
 
 .bottom-container {
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: end;
 }
@@ -183,21 +173,25 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
 
-.hud-main-conainer img {
+.attack-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+img {
     height: 80px;
     width: 80px;
+    cursor: pointer;
 }
 
 .d-none {
     display: none;
-}
-
-@media (max-width: 1030px) {
-    .bottom-container {
-        display: flex;
-    }
 }
 
 @media only screen and (max-width: 720px) {
