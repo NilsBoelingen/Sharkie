@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html translate="no">
     <head>
         <meta charset='utf-8'>
         <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -51,13 +51,15 @@
     </head>
     <body onload="init()">
         <h1>Sharkie - The Game</h1>
-        <main>
+        <main id="mainFullscreen">
             <canvas height="480" width="720" id="canvas"></canvas>
 
+            <div class="start-button" id="startButton"></div>
+            <div class="retry-button" id="retryButton"></div>
+
             <div class="top-container">
-                <img src="./img/hud/musik_on.png" id="muteButton"
-                    onclick="muteGameMusik()">
-                <img src="./img/hud/fullscreen.png" id="fullscreenButton" alt>
+                <img src="./img/hud/musik_on.png" id="muteButton" onclick="muteGameMusik()">
+                <img src="./img/hud/fullscreen.png" id="fullscreenButton" onclick="switchFullscreen()">
             </div>
             <div class="arrow-container d-none" id="arrowsButtons">
                 <div>

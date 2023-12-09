@@ -129,19 +129,15 @@ class Character extends MovableObject {
             this.checkAttackType();
         }, 100);
         let interval1 = setInterval(() => {
-            if (this.deadBy == 'shock' && !this.hittedBy) {
-                clearInterval(interval1);
-                clearInterval(intervalMove);
-                clearInterval(intervalAttack);
+            if (this.characterDeadByShock()) {
+                this.clearSettedIntervalls(interval1, intervalMove, intervalAttack);
                 this.deadByShock();
-            } else if (this.deadBy == 'poison' && !this.hittedBy) {
-                clearInterval(interval1);
-                clearInterval(intervalMove);
-                clearInterval(intervalAttack);
+            } else if (this.characterDeadByPoison()) {
+                this.clearSettedIntervalls(interval1, intervalMove, intervalAttack);
                 this.deadByPoison();
-            } else if (this.hittedBy == 'poison' && !this.deadBy) {
+            } else if (this.characterHittedByPoison()) {
                 this.hittedByPoison();
-            } else if (this.hittedBy == 'shock' && !this.deadBy) {
+            } else if (this.characterHittedByShock()) {
                 this.hittedByShock();
             }
         }, 100);
@@ -150,6 +146,28 @@ class Character extends MovableObject {
                 this.playAnimation(this.IMAGES_SWIM);
             };
         }, 200);
+    }
+
+    characterDeadByShock() {
+        return this.deadBy == 'shock' && !this.hittedBy;
+    }
+
+    characterDeadByPoison() {
+        return this.deadBy == 'poison' && !this.hittedBy;
+    }
+
+    characterHittedByShock() {
+        return this.hittedBy == 'shock' && !this.deadBy;
+    }
+
+    characterHittedByPoison() {
+        return this.hittedBy == 'poison' && !this.deadBy;
+    }
+
+    clearSettedIntervalls(interval1, intervalMove, intervalAttack) {
+        clearInterval(interval1);
+        clearInterval(intervalMove);
+        clearInterval(intervalAttack);
     }
 
     hittedByShock() {
@@ -201,30 +219,39 @@ class Character extends MovableObject {
 
     checkAttackType() {
         if (this.world.keyboard.SPACE && !this.attackStatus) {
-            this.attackStatus = true;
-            this.playAttackAnimation();
+            this.attackTypeNormal();
         };
         if (this.world.keyboard.D && !this.world.lastThrowTime) {
-            this.attackStatus = true;
-            this.playBubbleAttackAnimation();
-            this.world.lastThrowTime = new Date();
+            this.attackTypeBubble();
         }
         if (this.world.keyboard.S && !this.world.lastThrowTime && this.collectedPoison) {
-            this.attackStatus = true;
-            this.playPoisonBubbleAttackAnimation();
-            this.collectedPoison--;
-            this.world.lastThrowTime = new Date();
+            this.attackTypePoisonBubble();
         }
+    }
+
+    attackTypeNormal() {
+        this.attackStatus = true;
+        this.playAttackAnimation();
+    }
+
+    attackTypeBubble() {
+        this.attackStatus = true;
+        this.playBubbleAttackAnimation();
+        this.world.lastThrowTime = new Date();
+    }
+
+    attackTypePoisonBubble() {
+        this.attackStatus = true;
+        this.playPoisonBubbleAttackAnimation();
+        this.collectedPoison--;
+        this.world.lastThrowTime = new Date();
     }
 
     playAttackAnimation() {
         if (this.attackStatus) {
             this.interval = setInterval(() => {
                 this.playAnimation(this.IMAGES_ATTACK);
-                this.attack_sound.play();
-                setTimeout(() => {
-                    this.attack_sound.pause();
-                }, 390);
+                this.playAttackSound();
             }, 100);
         }
         setTimeout(() => {
@@ -233,18 +260,19 @@ class Character extends MovableObject {
         }, 600);
     }
 
+    playAttackSound() {
+        this.attack_sound.play();
+        setTimeout(() => {
+            this.attack_sound.pause();
+        }, 390);
+    }
+
     playBubbleAttackAnimation() {
         if (this.attackStatus) {
             this.interval = setInterval(() => {
                 this.playAnimation(this.IMAGES_BLOW_BUBBLE);
             }, 100);
-            this.bubble_attack_sound1.play();
-            setTimeout(() => {
-                this.bubble_attack_sound2.play();
-            }, 470);
-            setTimeout(() => {
-                this.bubble_attack_sound3.play();
-            }, 880);
+            this.playBubbleSound();
             setTimeout(() => {
                 this.attackStatus = false;
                 clearInterval(this.interval);
@@ -261,13 +289,7 @@ class Character extends MovableObject {
             this.interval = setInterval(() => {
                 this.playAnimation(this.IMAGES_BLOW_POISON);
             }, 100);
-            this.bubble_attack_sound1.play();
-            setTimeout(() => {
-                this.bubble_attack_sound2.play();
-            }, 470);
-            setTimeout(() => {
-                this.bubble_attack_sound3.play();
-            }, 880);
+            this.playBubbleSound();
             setTimeout(() => {
                 this.attackStatus = false;
                 clearInterval(this.interval);
@@ -277,6 +299,16 @@ class Character extends MovableObject {
             let poisonBubble = new PoisonBubble(this.x + 200, this.y + 120, this.otherDirection);
             this.world.poisonBubbles.push(poisonBubble);
         }, 700);
+    }
+
+    playBubbleSound() {
+        this.bubble_attack_sound1.play();
+        setTimeout(() => {
+            this.bubble_attack_sound2.play();
+        }, 470);
+        setTimeout(() => {
+            this.bubble_attack_sound3.play();
+        }, 880);
     }
 
     checkWinGame() {
@@ -316,18 +348,34 @@ class Character extends MovableObject {
     }
 
     checkMovingDirection() {
-        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_right) {
+        if (this.isMoveRight()) {
             this.checkMoveRight();
         };
-        if (this.world.keyboard.LEFT && this.x > this.world.level.level_end_left) {
+        if (this.isMoveLeft()) {
             this.checkMoveLeft();
         };
-        if (this.world.keyboard.UP && this.y > this.world.level.level_end_up) {
+        if (this.isMoveUp()) {
             this.checkMoveUp();
         };
-        if (this.world.keyboard.DOWN && this.y < this.world.level.level_end_down) {
+        if (this.isMoveDown()) {
             this.checkMoveDown();
         };
+    }
+
+    isMoveRight() {
+        return this.world.keyboard.RIGHT && this.x < this.world.level.level_end_right;
+    }
+
+    isMoveLeft() {
+        return this.world.keyboard.LEFT && this.x > this.world.level.level_end_left;
+    }
+
+    isMoveUp() {
+        return this.world.keyboard.UP && this.y > this.world.level.level_end_up;
+    }
+
+    isMoveDown() {
+        return this.world.keyboard.DOWN && this.y < this.world.level.level_end_down;
     }
 
     checkMoveRight() {

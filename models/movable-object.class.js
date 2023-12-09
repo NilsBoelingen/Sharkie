@@ -54,15 +54,27 @@ class MovableObject extends DrawableObject {
             this.energy = 0;
         }
         if (enemy instanceof JellyFish && enemy.superDangerous) {
-            this.lastHitfromSuperDangerous = true;
-            this.lastHitShock = new Date().getTime();
+            this.hitBySuperDangerous();
         } else if (enemy instanceof JellyFish && !enemy.superDangerous){
-            this.lastHitfromSuperDangerous = false;
-            this.lastHitShock = new Date().getTime();
+            this.hitByJellyFish();
         } else {
-            this.lastHitfromSuperDangerous = false;
-            this.lastHitPoison = new Date().getTime();
+            this.hitByPufferFish();
         }
+    }
+
+    hitBySuperDangerous() {
+        this.lastHitfromSuperDangerous = true;
+        this.lastHitShock = new Date().getTime();
+    }
+
+    hitByJellyFish() {
+        this.lastHitfromSuperDangerous = false;
+        this.lastHitShock = new Date().getTime();
+    }
+
+    hitByPufferFish() {
+        this.lastHitfromSuperDangerous = false;
+        this.lastHitPoison = new Date().getTime();
     }
 
     isHurtShock() {

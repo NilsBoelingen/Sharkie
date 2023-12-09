@@ -13,6 +13,7 @@ class Endboss extends MovableObject {
     energy = 100;
     lastHit = 0;
     firstContact = false;
+    introAnimation = false;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -69,7 +70,7 @@ class Endboss extends MovableObject {
     ];
 
     constructor() {
-        super().loadImage('img/2.Enemy/3 Final Enemy/2.floating/1.png');
+        super();
         this.loadImages(this.IMAGES_INTRO);
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_ATTACK);
@@ -80,55 +81,77 @@ class Endboss extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
-            if (this.isDead()) {
-                this.speed_y = 0.8;
-                setTimeout(() => {
-                    this.moveUp();
-                }, 200);
+        setInterval(() => this.setEndbossMovement(), 1000 / 60);
+        let animateIntervall = setInterval(() => {
+            this.playEndbossAnimations(animateIntervall);
+        }, 100);
+        setInterval(() => this.setFirstContact(), 100);
+    }
+
+    setFirstContact() {
+        if (this.x - this.world.character.x < 500 && !this.firstContact) {
+            this.firstContact = true;
+            setTimeout(() => {
+                this.introAnimation = true;
+            }, 800);
+        }
+    }
+
+    setEndbossMovement() {
+        if (this.isDead()) {
+            this.speed_y = 0.8;
+            setTimeout(() => {
+                this.moveUp();
+            }, 200);
+        } else if (this.isHurt()) {
+            this.speed_x += 0.01;
+        } else if (this.firstContact && this.introAnimation) {
+            this.moveLeft();
+        };
+    }
+
+    playEndbossAnimations(animateIntervall) {
+        if (this.firstContact) {
+            this.width = 500;
+            this.height = 500;
+            if (!this.introAnimation) {
+                this.playIntroAnimation(animateIntervall);
+            } else if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+                this.world.winGame = true;
             } else if (this.isHurt()) {
-
-            } else if (this.firstContact) {
-                this.moveLeft();
-            };
-        }, 1000 / 60);
-
-        let i = 0;
-        setInterval(() => {
-            if (this.firstContact) {
-                this.width = 500;
-                this.height = 500;
-                if (i < 10) {
-                    this.playAnimation(this.IMAGES_INTRO);
-                } else if (this.isDead()) {
-                    this.playAnimation(this.IMAGES_DEAD);
-                    this.world.winGame = true;
-                } else if (this.isHurt()) {
-                    let interval = setInterval(() => {
-                        this.playAnimation(this.IMAGES_HURT);
-                    }, 100);
-                    setTimeout(() => {
-                        clearInterval(interval)
-                    }, 400);
-                    this.speed_x += 0.05;
-                } else if (this.checkCharacterDistance()) {
-                    this.playAnimation(this.IMAGES_ATTACK);
-                } else {
-                    this.playAnimation(this.IMAGES_SWIM);
-                }
-                i++;
-            };
-        }, 100);
-
-        setInterval(() => {
-            if (this.world.character.x >= 4600) {
-                this.firstContact = true;
+                this.playEndbossIsHurtAnimation();
+            } else if (this.checkCharacterDistance()) {
+                this.playAnimation(this.IMAGES_ATTACK);
+            } else {
+                this.playAnimation(this.IMAGES_SWIM);
             }
+
+        };
+    }
+
+    playIntroAnimation(animateIntervall) {
+        clearInterval(animateIntervall);
+        let interval = setInterval(() => {
+            this.playAnimation(this.IMAGES_INTRO);
+        }, 100)
+        setTimeout(() => {
+            clearInterval(interval);
+            this.animate();
+        }, 1000);
+    }
+
+    playEndbossIsHurtAnimation() {
+        let interval = setInterval(() => {
+            this.playAnimation(this.IMAGES_HURT);
         }, 100);
+        setTimeout(() => {
+            clearInterval(interval)
+        }, 400);
     }
 
     checkCharacterDistance() {
-        return this.x - this.world.character.x < 300;
+        return this.x - this.world.character.x < 290;
     }
 
     isHurt() {

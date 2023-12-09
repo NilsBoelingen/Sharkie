@@ -2,6 +2,7 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 intervallIds = [];
+let fullscreen = false;
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -177,4 +178,33 @@ window.addEventListener("mousemove", (e) => {
 function setStopableInterval(fn, time) {
     let id = setInterval(fn, time);
     intervallIds.push(id);
+}
+
+function switchFullscreen() {
+    let mainFullscreen = document.getElementById('mainFullscreen');
+    if (!fullscreen) {
+        fullscreen = true;
+        enterFullscreen(mainFullscreen);
+    } else if (fullscreen) {
+        fullscreen = false;
+        exitFullscreen();
+    }
+}
+
+function enterFullscreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.msRequestFullscreen) {      // for IE11 (remove June 15, 2022)
+        element.msRequestFullscreen();
+    } else if (element.webkitRequestFullscreen) {  // iOS Safari
+        element.webkitRequestFullscreen();
+    }
+}
+
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
 }

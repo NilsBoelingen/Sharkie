@@ -52,34 +52,41 @@ class PufferFish extends MovableObject {
 
     animate(y) {
         let images = this.randomColor();
-        setInterval(() => {
-            if (this.isDead()) {
-                this.moveLeft();
-                this.speed_y = 2;
-                this.speed_x = 4;
-                if (y <= 180) {
-                    this.moveUp();
-                } else if (y > 180) {
-                    this.moveDown();
-                }
-            } else {
-                if (this.checkGameStarted()) {
-                    this.moveLeft();
-                }
-            }
-        }, 1000 / 60);
+        setInterval(() => this.pufferFishMovement(), 1000 / 60);
+        setInterval(() => this.pufferFishAnimation(images), 100);
+    }
 
-        setInterval(() => {
-            if (images == this.IMAGES_SWIM_GREEN && this.isDead()) {
-                this.loadImage(this.IMAGES_DEAD_PUFFER[0]);
-            } else if (images == this.IMAGES_SWIM_RED && this.isDead()) {
-                this.loadImage(this.IMAGES_DEAD_PUFFER[2]);
-            } else if (images == this.IMAGES_SWIM_ORANGE && this.isDead()) {
-                this.loadImage(this.IMAGES_DEAD_PUFFER[1]);
-            } else {
-                this.playAnimation(images);
+    pufferFishMovement() {
+        if (this.isDead()) {
+            this.deadMovement();
+        } else {
+            if (this.checkGameStarted()) {
+                this.moveLeft();
             }
-        }, 100);
+        }
+    }
+
+    deadMovement() {
+        this.moveLeft();
+        this.speed_y = 2;
+        this.speed_x = 4;
+        if (y <= 180) {
+            this.moveUp();
+        } else if (y > 180) {
+            this.moveDown();
+        }
+    }
+
+    pufferFishAnimation(images) {
+        if (images == this.IMAGES_SWIM_GREEN && this.isDead()) {
+            this.loadImage(this.IMAGES_DEAD_PUFFER[0]);
+        } else if (images == this.IMAGES_SWIM_RED && this.isDead()) {
+            this.loadImage(this.IMAGES_DEAD_PUFFER[2]);
+        } else if (images == this.IMAGES_SWIM_ORANGE && this.isDead()) {
+            this.loadImage(this.IMAGES_DEAD_PUFFER[1]);
+        } else {
+            this.playAnimation(images);
+        }
     }
 
     randomColor() {

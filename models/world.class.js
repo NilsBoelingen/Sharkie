@@ -3,7 +3,6 @@ class World {
     ctx;
     keyboard;
     startScreen = new StartScreen();
-    startButton = new StartButton();
     level = level1;
     character = new Character();
     enemies = level1.enemies;
@@ -30,11 +29,7 @@ class World {
     touchY = 0;
 
     constructor(canvas, keyboard) {
-        this.ctx = canvas.getContext('2d');
-        this.canvas = canvas;
-        this.keyboard = keyboard;
-        this.ctx.font = 'bold 40px Arial';
-        this.ctx.fillStyle = 'white';
+        this.setCanvas(canvas, keyboard);
         this.draw();
         this.run();
         this.setWorld();
@@ -42,53 +37,40 @@ class World {
         this.showTouchButtons();
     }
 
+    setCanvas(canvas, keyboard) {
+        this.ctx = canvas.getContext('2d');
+        this.canvas = canvas;
+        this.keyboard = keyboard;
+        this.ctx.font = 'bold 40px Arial';
+        this.ctx.fillStyle = 'white';
+    }
+
     run() {
         setStopableInterval(() => {
             this.checkCollisions();
         }, 200);
-        setInterval(() => {
-            this.checkMouse();
-            this.checkTouch()
-        }, 10);
     }
 
-    checkMouse() {
-        if (this.checkMouseClickCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver && !this.winGame) {
+    startGame() {
+        if (this.canStartGamewhitTouch()) {
             this.gameStarted = true;
-        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver && !this.winGame) {
+        } else if (this.canRetryGameOverwhitTouch()) {
             location.reload();
-        } else if (this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && !this.gameOver && this.winGame) {
-            location.reload();
-        }
-        if (this.checkMouseClickCollision(this.startButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted || this.checkMouseClickCollision(this.retryButton) && !this.keyboard.LEFT_CLICK && !this.gameStarted) {
-            this.canvas.style.cursor = "pointer";
-        } else {
-            this.canvas.style.cursor = "auto";
-        }
-    }
-
-    checkTouch() {
-        if (this.checkTouchCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver && !this.winGame) {
-            this.gameStarted = true;
-        } else if (this.checkTouchCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver && !this.winGame) {
-            location.reload();
-        } else if (this.checkTouchCollision(this.retryButton) && this.keyboard.LEFT_CLICK && !this.gameOver && this.winGame) {
+        } else if (this.canRetryWinWhitTouch()) {
             location.reload();
         }
     }
 
-    checkMouseClickCollision(target) {
-        return this.keyboard.MOUSE_POSITION[0] > target.x &&
-            this.keyboard.MOUSE_POSITION[0] < target.x + target.width &&
-            this.keyboard.MOUSE_POSITION[1] > target.y &&
-            this.keyboard.MOUSE_POSITION[1] < target.y + target.height;
+    canStartGame() {
+        return this.checkMouseClickCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver && !this.winGame;
     }
 
-    checkTouchCollision(target) {
-        return this.touchX > target.x &&
-        this.touchX < target.x + target.width &&
-        this.touchY > target.y &&
-        this.touchY < target.y + target.height;
+    canRetryGameOver() {
+        return this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver && !this.winGame;
+    }
+
+    canRetryWin() {
+        return this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && !this.gameOver && this.winGame;
     }
 
     checkCollisions() {
@@ -96,58 +78,83 @@ class World {
         let j = 0;
         let k = 0;
         let l = 0;
-        this.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy) && !this.keyboard.SPACE) {
-                this.character.characterGetHit(enemy);
-            } else if (this.character.isAttacking(enemy) && this.keyboard.SPACE) {
-                this.character.enemyGetHit(enemy);
-            }
-        });
-        this.enemies.forEach((enemy) => {
-            k = 0;
-            this.bubbles.forEach((bubble) => {
-                if (enemy.isColliding(bubble) && enemy instanceof JellyFish) {
-                    enemy.energy = 0;
-                    this.bubbles.splice(k, 1);
-                    enemy.animate();
-                }
-                k++;
-            })
-        })
-        this.enemies.forEach((enemy) => {
-            l = 0;
-            this.poisonBubbles.forEach((poisonBubble) => {
-                if (enemy.isColliding(poisonBubble) && enemy instanceof Endboss) {
-                    if (enemy.energy <= 0) {
-                        enemy.energy = 0;
-                    } else {
-                        enemy.lastHit = new Date().getTime();
-                        enemy.energy -= poisonBubble.damage;
-                        this.poisonBubbles.splice(l, 1);
-                    };
-                }
-                l++;
-            })
-        })
-        this.enemies.forEach((enemy) => {
-            if (enemy.isDead()) {
-                enemy.changeOffset(enemy);
-            }
-        })
+        this.enemies.forEach((enemy) => this.checkColissionEnemy(enemy));
+        this.enemies.forEach((enemy) => this.checkColissionBubble(enemy, k));
+        this.enemies.forEach((enemy) => this.checkColissionPoisonBubble(enemy, l));
+        this.enemies.forEach((enemy) => this.isEnemyDead(enemy));
         this.coins.forEach((coin) => {
-            if (this.character.isColliding(coin)) {
-                this.character.collectedCoins += 1;
-                this.coins.splice(i, 1);
-            }
+            this.checkColissionCoin(coin, i);
             i++;
-        })
+        });
         this.poisons.forEach((poison) => {
-            if (this.character.isColliding(poison)) {
-                this.character.collectedPoison += 1;
-                this.poisons.splice(j, 1);
-            }
+            this.checkColissionPoison(poison, j);
             j++;
-        })
+        });
+    }
+
+    checkColissionEnemy(enemy) {
+        if (this.character.isColliding(enemy) && !this.keyboard.SPACE) {
+            this.character.characterGetHit(enemy);
+        } else if (this.character.isAttacking(enemy) && this.keyboard.SPACE) {
+            this.character.enemyGetHit(enemy);
+        }
+    }
+
+    checkColissionBubble(enemy, k) {
+        k = 0;
+        this.bubbles.forEach((bubble) => {
+            this.isJellyFish(bubble, enemy, k);
+            k++;
+        });
+    }
+
+    isJellyFish(bubble, enemy, k) {
+        if (enemy.isColliding(bubble) && enemy instanceof JellyFish) {
+            enemy.energy = 0;
+            this.bubbles.splice(k, 1);
+            enemy.animate();
+        };
+    }
+
+    checkColissionPoisonBubble(enemy, l) {
+        l = 0;
+        this.poisonBubbles.forEach((poisonBubble) => {
+            this.isEndboss(poisonBubble, enemy, l);
+            l++;
+        });
+    }
+
+    isEndboss(poisonBubble, enemy, l) {
+        if (enemy.isColliding(poisonBubble) && enemy instanceof Endboss) {
+            if (enemy.energy <= 0) {
+                enemy.energy = 0;
+            } else {
+                enemy.lastHit = new Date().getTime();
+                enemy.energy -= poisonBubble.damage;
+                this.poisonBubbles.splice(l, 1);
+            };
+        };
+    }
+
+    isEnemyDead(enemy) {
+        if (enemy.isDead()) {
+            enemy.changeOffset(enemy);
+        };
+    }
+
+    checkColissionCoin(coin, i) {
+        if (this.character.isColliding(coin)) {
+            this.character.collectedCoins += 1;
+            this.coins.splice(i, 1);
+            console.log(i)
+        };
+    }
+
+    checkColissionPoison(poison, j) {
+        if (this.character.isColliding(poison)) {
+            this.character.collectedPoison += 1;
+            this.poisons.splice(j, 1);
+        }
     }
 
     setWorld() {
@@ -166,50 +173,73 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        if (!this.gameStarted && !this.gameOver && !this.winGame) {
-            this.addToMap(this.startScreen);
-            this.addTextToMap('SHARKIE', 400, 320)
-            this.addTextToMap('THE GAME', 385, 370)
-            this.addToMap(this.startButton);
+        if (this.isStartScreen()) {
+            this.showStartScreen();
         } else if (this.gameOver) {
-            this.addObjectsToMap(this.level.backgroundObjects);
-            this.addToMap(this.endScreenLose);
-            this.addToMap(this.retryButton);
+            this.showGameOverScreen();
         } else if (this.winGame) {
-            this.addObjectsToMap(this.level.backgroundObjects);
-            this.addToMap(this.endScreenWin);
-            this.addToMap(this.retryButton);
+            this.showWinScreen();
         } else if (this.gameStarted) {
-
-            this.ctx.translate(this.camera_x, 0);
-            this.addObjectsToMap(this.level.backgroundObjects);
-            this.addToMap(this.character);
-            this.addObjectsToMap(this.bubbles);
-            this.addObjectsToMap(this.poisonBubbles);
-            this.addObjectsToMap(this.level.coins);
-            this.addObjectsToMap(this.level.poisons);
-            this.addObjectsToMap(this.level.enemies);
-            this.ctx.translate(-this.camera_x, 0);
-
-            this.addToMap(this.statusBar);
-            this.addTextToMap(this.character.energy, 80, 60);
-            this.addToMap(this.coinBar);
-            this.addTextToMap(this.character.collectedCoins, 220, 60);
-            this.addToMap(this.poisonBar);
-            this.addTextToMap(this.character.collectedPoison, 310, 60);
+            this.drawGame();
+            this.drawStatusBars();
         }
+        this.animationFrame();
+    }
 
+    animationFrame() {
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
     }
 
+    isStartScreen() {
+        return !this.gameStarted && !this.gameOver && !this.winGame;
+    }
+
+    showStartScreen() {
+        this.addToMap(this.startScreen);
+        this.addTextToMap('SHARKIE', 400, 320)
+        this.addTextToMap('THE GAME', 385, 370)
+    }
+
+    showGameOverScreen() {
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addToMap(this.endScreenLose);
+        this.addToMap(this.retryButton);
+    }
+
+    showWinScreen() {
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addToMap(this.endScreenWin);
+        this.addToMap(this.retryButton);
+    }
+
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
         })
+    }
+
+    drawGame() {
+        this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.bubbles);
+        this.addObjectsToMap(this.poisonBubbles);
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.poisons);
+        this.addObjectsToMap(this.level.enemies);
+        this.ctx.translate(-this.camera_x, 0);
+    }
+
+    drawStatusBars() {
+        this.addToMap(this.statusBar);
+        this.addTextToMap(this.character.energy, 80, 60);
+        this.addToMap(this.coinBar);
+        this.addTextToMap(this.character.collectedCoins, 220, 60);
+        this.addToMap(this.poisonBar);
+        this.addTextToMap(this.character.collectedPoison, 310, 60);
     }
 
     addToMap(mo) {
@@ -277,17 +307,19 @@ class World {
     showTouchButtons() {
         let arrowsButtons = document.getElementById('arrowsButtons');
         let attackButtons = document.getElementById('attackButtons');
-        setInterval(() => {
-            if (navigator.maxTouchPoints >= 1) {
-                if (this.gameStarted) {
-                    arrowsButtons.classList.remove('d-none');
-                    attackButtons.classList.remove('d-none');
-                } 
-            } else {
-                arrowsButtons.classList.add('d-none');
-                attackButtons.classList.add('d-none');
-            }
-        }, 100);
+        setInterval(() => this.initTouchButtons(arrowsButtons), 100);
+    }
+
+    initTouchButtons(arrowsButtons) {
+        if (navigator.maxTouchPoints >= 1) {
+            if (this.gameStarted) {
+                arrowsButtons.classList.remove('d-none');
+                attackButtons.classList.remove('d-none');
+            } 
+        } else {
+            arrowsButtons.classList.add('d-none');
+            attackButtons.classList.add('d-none');
+        }
     }
 }
 

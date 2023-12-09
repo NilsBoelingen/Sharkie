@@ -22,31 +22,46 @@ class Bubble extends MovableObject {
     }
 
     blow(otherDirection) {
+        this.setXOtherDirection(otherDirection);
+        setInterval(() => {
+            if (this.speed_x > 0 && !otherDirection) {
+                this.blowBubbleRight();
+            } else if (this.speed_x <= 0 && !otherDirection) {
+                this.moveUpWhenBubbleSpeedDown();
+            } else if (this.speed_x > 0 && otherDirection) {
+                this.blowBubbleLeft();
+            } else if (this.speed_x <= 0 && otherDirection) {
+                this.moveUpWhenBubbleSpeedDown();
+            }
+        }, 1000 / 60);
+    }
+
+    blowBubbleRight() {
+        this.moveRight();
+        this.speed_x -= this.accelerationX;
+        setTimeout(() => {
+            this.moveUp();
+            this.speed_y += this.accelerationY;
+        }, 100);
+    }
+
+    blowBubbleLeft() {
+        this.moveLeft();
+        this.speed_x -= this.accelerationX;
+        setTimeout(() => {
+            this.moveUp();
+            this.speed_y += this.accelerationY;
+        }, 100);
+    }
+
+    moveUpWhenBubbleSpeedDown() {
+        this.moveUp();
+        this.speed_y += this.accelerationY;
+    }
+
+    setXOtherDirection(otherDirection) {
         if (otherDirection) {
             this.x -= 200;
         }
-        setInterval(() => {
-            if (this.speed_x > 0 && !otherDirection) {
-                this.moveRight();
-                this.speed_x -= this.accelerationX;
-                setTimeout(() => {
-                    this.moveUp();
-                    this.speed_y += this.accelerationY;
-                }, 100);
-            } else if (this.speed_x <= 0 && !otherDirection) {
-                this.moveUp();
-                this.speed_y += this.accelerationY;
-            } else if (this.speed_x > 0 && otherDirection) {
-                this.moveLeft();
-                this.speed_x -= this.accelerationX;
-                setTimeout(() => {
-                    this.moveUp();
-                    this.speed_y += this.accelerationY;
-                }, 100);
-            } else if (this.speed_x <= 0 && otherDirection) {
-                this.moveUp();
-                this.speed_y += this.accelerationY;
-            }
-        }, 1000 / 60);
     }
 }
