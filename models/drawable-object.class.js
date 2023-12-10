@@ -5,6 +5,7 @@ class DrawableObject {
     imageCache = {};
     currentImage = 0;
     otherDirection = false;
+    world;
 
     IMAGES_START_BUTTON = [
         'img/6.Botones/Start/1.png',
@@ -13,9 +14,18 @@ class DrawableObject {
         'img/6.Botones/Start/4.png',
     ];
 
+    IMAGES_RETRY_BUTTON = [
+        'img/6.Botones/Try again/Recurso 15.png',
+        'img/6.Botones/Try again/Recurso 16.png',
+        'img/6.Botones/Try again/Recurso 17.png',
+        'img/6.Botones/Try again/Recurso 18.png',
+    ];
+
     constructor() {
         this.loadImages(this.IMAGES_START_BUTTON);
+        this.loadImages(this.IMAGES_RETRY_BUTTON);
         this.animateStartButton();
+        this.animateRetryButton();
     }
 
     loadImage(path) {
@@ -81,7 +91,6 @@ class DrawableObject {
         let startButton = document.getElementById('startButton');
 
         let interval = setInterval(() => {
-            // debugger
             if (!startButtonActivated) {
                 let i = this.currentImage % this.IMAGES_START_BUTTON.length;
                 let path = this.IMAGES_START_BUTTON[i];
@@ -95,6 +104,26 @@ class DrawableObject {
                 startButton.classList.add('d-none');
                 } catch (e) {}
             }
+
+        }, 200);
+    }
+
+    animateRetryButton() {
+        let retryButton = document.getElementById('retryButton');
+        let interval = setInterval(() => {
+            // if (this.world.gameIsOver) {
+                let i = this.currentImage % this.IMAGES_RETRY_BUTTON.length;
+                let path = this.IMAGES_RETRY_BUTTON[i];
+                try {
+                    retryButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
+                } catch (e) {}
+                this.currentImage++;
+            // } else {
+            //     clearInterval(interval);
+            //     try {
+            //         retryButton.classList.add('d-none');
+            //     } catch (e) {}
+            // }
 
         }, 200);
     }

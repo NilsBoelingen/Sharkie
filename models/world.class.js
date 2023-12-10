@@ -16,7 +16,6 @@ class World {
     poisonBubbles = [];
     endScreenLose = new EndScreenLose();
     endScreenWin = new EndScreenWin();
-    retryButton = new RetryButton();
     camera_x = 0;
     lastThrowTime = 0;
     gameStarted = false;
@@ -27,6 +26,8 @@ class World {
     muteMusik = false;
     touchX = 0;
     touchY = 0;
+    do = new DrawableObject();
+    gameIsOver = false;
 
     constructor(canvas, keyboard) {
         this.setCanvas(canvas, keyboard);
@@ -35,6 +36,7 @@ class World {
         this.setWorld();
         this.playMusik();
         this.showTouchButtons();
+        this.checkGameIsOver()
     }
 
     setCanvas(canvas, keyboard) {
@@ -71,6 +73,18 @@ class World {
 
     canRetryWin() {
         return this.gameStarted && !this.gameOver && this.winGame;
+    }
+
+    checkGameIsOver() {
+        setInterval(() => {
+            if (this.gameStarted && this.gameOver && !this.winGame) {
+                this.gameIsOver = true;
+            } else if (this.gameStarted && !this.gameOver && this.winGame) {
+                this.gameIsOver = true;
+            } else {
+                this.gameIsOver = false;
+            }
+        }, 100);
     }
 
     checkCollisions() {
@@ -160,6 +174,7 @@ class World {
     setWorld() {
         this.character.world = this;
         this.level.world = this;
+        this.do.world = this;
         this.enemies.forEach((enemy) => {
             enemy.world = this;
         })
@@ -206,13 +221,11 @@ class World {
     showGameOverScreen() {
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addToMap(this.endScreenLose);
-        this.addToMap(this.retryButton);
     }
 
     showWinScreen() {
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addToMap(this.endScreenWin);
-        this.addToMap(this.retryButton);
     }
 
     addObjectsToMap(objects) {
@@ -307,10 +320,10 @@ class World {
     showTouchButtons() {
         let arrowsButtons = document.getElementById('arrowsButtons');
         let attackButtons = document.getElementById('attackButtons');
-        setInterval(() => this.initTouchButtons(arrowsButtons), 100);
+        setInterval(() => this.initTouchButtons(arrowsButtons, attackButtons), 100);
     }
 
-    initTouchButtons(arrowsButtons) {
+    initTouchButtons(arrowsButtons, attackButtons) {
         if (navigator.maxTouchPoints >= 1) {
             if (this.gameStarted) {
                 arrowsButtons.classList.remove('d-none');

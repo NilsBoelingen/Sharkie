@@ -217,6 +217,15 @@ img {
     top: 82%;
 }
 
+.retry-button {
+    cursor: pointer;
+    width: 55.56%;
+    height: 16.67%;
+    position: absolute;
+    top: 62.5%;
+    left: 22.22%;
+}
+
 @media only screen and (max-height: 1079px) {
     .instructions-container {
         bottom: 0%;
