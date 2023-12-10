@@ -119,6 +119,7 @@ class Endboss extends MovableObject {
             } else if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
                 this.world.winGame = true;
+                this.world.gameStarted = false;
             } else if (this.isHurt()) {
                 this.playEndbossIsHurtAnimation();
             } else if (this.checkCharacterDistance()) {

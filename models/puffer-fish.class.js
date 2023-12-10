@@ -70,9 +70,9 @@ class PufferFish extends MovableObject {
         this.moveLeft();
         this.speed_y = 2;
         this.speed_x = 4;
-        if (y <= 180) {
+        if (this.y <= 180) {
             this.moveUp();
-        } else if (y > 180) {
+        } else if (this.y > 180) {
             this.moveDown();
         }
     }

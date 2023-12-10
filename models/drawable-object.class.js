@@ -121,10 +121,7 @@ class DrawableObject {
         setInterval(() => {
             if (this.gameIsOver) {
                 this.playAnimationRetryButton(retryButton);
-            } else {
-                this.hideRetryButton(retryButton);
             }
-
         }, 200);
     }
 
@@ -136,11 +133,5 @@ class DrawableObject {
             retryButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
         } catch (e) {}
         this.currentImage++;
-    }
-
-    hideRetryButton(retryButton) {
-        try {
-            retryButton.classList.add('d-none');
-        } catch (e) {}
     }
 }

@@ -313,11 +313,11 @@ class Character extends MovableObject {
     checkWinGame() {
         setInterval(() => {
             this.world.enemies.forEach((enemy) => {
-                if (this instanceof Endboss && this.isDead())
+                if (enemy instanceof Endboss && this.enemy.isDead())
                     setTimeout(() => {
                         this.world.gameStarted = false;
                         this.world.winGame = true;
-                    }, 2000);
+                    }, 1000);
             })
         }, 100);
     }
