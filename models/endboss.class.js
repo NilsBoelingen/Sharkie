@@ -89,12 +89,14 @@ class Endboss extends MovableObject {
     }
 
     setFirstContact() {
-        if (this.x - this.world.character.x < 500 && !this.firstContact) {
-            this.firstContact = true;
-            setTimeout(() => {
-                this.introAnimation = true;
-            }, 800);
-        }
+        try {
+            if (this.x - this.world.character.x < 500 && !this.firstContact) {
+                this.firstContact = true;
+                setTimeout(() => {
+                    this.introAnimation = true;
+                }, 800);
+            }
+        } catch (e) { }
     }
 
     setEndbossMovement() {
