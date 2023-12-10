@@ -52,25 +52,25 @@ class World {
     }
 
     startGame() {
-        if (this.canStartGamewhitTouch()) {
+        if (this.canStartGame()) {
             this.gameStarted = true;
-        } else if (this.canRetryGameOverwhitTouch()) {
+        } else if (this.canRetryGameOver()) {
             location.reload();
-        } else if (this.canRetryWinWhitTouch()) {
+        } else if (this.canRetryWin()) {
             location.reload();
         }
     }
 
     canStartGame() {
-        return this.checkMouseClickCollision(this.startButton) && this.keyboard.LEFT_CLICK && !this.gameOver && !this.winGame;
+        return !this.gameStarted && !this.gameOver && !this.winGame;
     }
 
     canRetryGameOver() {
-        return this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && this.gameOver && !this.winGame;
+        return this.gameStarted && this.gameOver && !this.winGame;
     }
 
     canRetryWin() {
-        return this.checkMouseClickCollision(this.retryButton) && this.keyboard.LEFT_CLICK && !this.gameOver && this.winGame;
+        return this.gameStarted && !this.gameOver && this.winGame;
     }
 
     checkCollisions() {

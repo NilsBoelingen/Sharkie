@@ -3,6 +3,7 @@ let world;
 let keyboard = new Keyboard();
 intervallIds = [];
 let fullscreen = false;
+let startButtonActivated = false;
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -207,4 +208,8 @@ function exitFullscreen() {
     } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
     }
+}
+
+function activateStartButton() {
+    startButtonActivated = true;
 }

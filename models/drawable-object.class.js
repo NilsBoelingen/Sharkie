@@ -79,14 +79,23 @@ class DrawableObject {
 
     animateStartButton() {
         let startButton = document.getElementById('startButton');
-        setInterval(() => {
-            let i = this.currentImage % this.IMAGES_START_BUTTON.length;
-            let path = this.IMAGES_START_BUTTON[i];
-            try {
-                startButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
-            } catch (e) {
+
+        let interval = setInterval(() => {
+            // debugger
+            if (!startButtonActivated) {
+                let i = this.currentImage % this.IMAGES_START_BUTTON.length;
+                let path = this.IMAGES_START_BUTTON[i];
+                try {
+                    startButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
+                } catch (e) {}
+                this.currentImage++;
+            } else {
+                clearInterval(interval);
+                try {
+                startButton.classList.add('d-none');
+                } catch (e) {}
             }
-            this.currentImage++;
+
         }, 200);
     }
 }

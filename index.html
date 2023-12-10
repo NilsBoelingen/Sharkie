@@ -43,7 +43,6 @@
         <script src="./models/poison-bubble.class.js"></script>
         <script src="./levels/level1.js"></script>
         <script src="./models/start-screen.class.js"></script>
-        <script src="./models/start-button.class.js"></script>
         <script src="./models/end-screen-lose.class.js"></script>
         <script src="./models/retry-button.class.js"></script>
         <script src="./models/end-screen-win.class.js"></script>
@@ -54,7 +53,7 @@
         <main id="mainFullscreen">
             <canvas height="480" width="720" id="canvas"></canvas>
 
-            <div class="start-button" id="startButton"></div>
+            <div class="start-button" id="startButton" onclick="world.startGame(); activateStartButton()"></div>
             <div class="retry-button" id="retryButton"></div>
 
             <div class="top-container">
