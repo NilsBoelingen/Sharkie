@@ -27,7 +27,7 @@ class World {
     touchX = 0;
     touchY = 0;
     do = new DrawableObject();
-    gameIsOver = false;
+
 
     constructor(canvas, keyboard) {
         this.setCanvas(canvas, keyboard);
@@ -68,21 +68,21 @@ class World {
     }
 
     canRetryGameOver() {
-        return this.gameStarted && this.gameOver && !this.winGame;
+        return !this.gameStarted && this.gameOver && !this.winGame;
     }
 
     canRetryWin() {
-        return this.gameStarted && !this.gameOver && this.winGame;
+        return !this.gameStarted && !this.gameOver && this.winGame;
     }
 
     checkGameIsOver() {
         setInterval(() => {
-            if (this.gameStarted && this.gameOver && !this.winGame) {
-                this.gameIsOver = true;
-            } else if (this.gameStarted && !this.gameOver && this.winGame) {
-                this.gameIsOver = true;
+            if (!this.gameStarted && this.gameOver && !this.winGame) {
+                this.do.gameIsOver = true;
+            } else if (!this.gameStarted && !this.gameOver && this.winGame) {
+                this.do.gameIsOver = true;
             } else {
-                this.gameIsOver = false;
+                this.do.gameIsOver = false;
             }
         }, 100);
     }
@@ -160,7 +160,7 @@ class World {
         if (this.character.isColliding(coin)) {
             this.character.collectedCoins += 1;
             this.coins.splice(i, 1);
-            console.log(i)
+
         };
     }
 

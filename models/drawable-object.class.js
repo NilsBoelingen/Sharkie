@@ -6,6 +6,7 @@ class DrawableObject {
     currentImage = 0;
     otherDirection = false;
     world;
+    gameIsOver;
 
     IMAGES_START_BUTTON = [
         'img/6.Botones/Start/1.png',
@@ -92,39 +93,54 @@ class DrawableObject {
 
         let interval = setInterval(() => {
             if (!startButtonActivated) {
-                let i = this.currentImage % this.IMAGES_START_BUTTON.length;
-                let path = this.IMAGES_START_BUTTON[i];
-                try {
-                    startButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
-                } catch (e) {}
-                this.currentImage++;
+                this.playAnimationStartButton(startButton);
             } else {
-                clearInterval(interval);
-                try {
-                startButton.classList.add('d-none');
-                } catch (e) {}
+                this.hideStartButton(startButton, interval);
+            }
+        }, 200);
+    }
+
+    playAnimationStartButton (startButton) {
+        let i = this.currentImage % this.IMAGES_START_BUTTON.length;
+        let path = this.IMAGES_START_BUTTON[i];
+        try {
+            startButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
+        } catch (e) {}
+        this.currentImage++;
+    }
+
+    hideStartButton(startButton, interval) {
+        clearInterval(interval);
+        try {
+        startButton.classList.add('d-none');
+        } catch (e) {}
+    }
+
+    animateRetryButton() {
+        let retryButton = document.getElementById('retryButton');
+        setInterval(() => {
+            if (this.gameIsOver) {
+                this.playAnimationRetryButton(retryButton);
+            } else {
+                this.hideRetryButton(retryButton);
             }
 
         }, 200);
     }
 
-    animateRetryButton() {
-        let retryButton = document.getElementById('retryButton');
-        let interval = setInterval(() => {
-            // if (this.world.gameIsOver) {
-                let i = this.currentImage % this.IMAGES_RETRY_BUTTON.length;
-                let path = this.IMAGES_RETRY_BUTTON[i];
-                try {
-                    retryButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
-                } catch (e) {}
-                this.currentImage++;
-            // } else {
-            //     clearInterval(interval);
-            //     try {
-            //         retryButton.classList.add('d-none');
-            //     } catch (e) {}
-            // }
+    playAnimationRetryButton(retryButton) {
+        retryButton.classList.remove('d-none');
+        let i = this.currentImage % this.IMAGES_RETRY_BUTTON.length;
+        let path = this.IMAGES_RETRY_BUTTON[i];
+        try {
+            retryButton.setAttribute("style", `background-image: url('${path}');background-size: 100% 100%`)
+        } catch (e) {}
+        this.currentImage++;
+    }
 
-        }, 200);
+    hideRetryButton(retryButton) {
+        try {
+            retryButton.classList.add('d-none');
+        } catch (e) {}
     }
 }

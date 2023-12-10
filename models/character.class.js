@@ -171,7 +171,6 @@ class Character extends MovableObject {
     }
 
     hittedByShock() {
-        console.log(this.hittedBy);
         let interval = setInterval(() => {
             this.playAnimation(this.IMAGES_HURT_SHOCK);
         }, 200);
