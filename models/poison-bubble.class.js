@@ -15,6 +15,13 @@ class PoisonBubble extends MovableObject {
     IMAGE = 'img/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png';
     damage = 10;
 
+    /**
+     * This function load the images, and the position of the poison bubbles
+     * 
+     * @param {string} x This is the x-coordinate of the bubble
+     * @param {string} y This is the y-coordinate of the bubble
+     * @param {string} otherDirection This is the direction. true is left, false is right
+     */
     constructor(x, y, otherDirection) {
         super().loadImage(this.IMAGE);
         this.x = x;
@@ -22,22 +29,11 @@ class PoisonBubble extends MovableObject {
         this.blow(otherDirection);
     }
 
-    // blow(x, y) {
-    //     setInterval(() => {
-    //         if (this.speed_x > 0) {
-    //             this.moveRight();
-    //             this.speed_x -= this.accelerationX;
-    //             setTimeout(() => {
-    //                 this.moveUp();
-    //                 this.speed_y += this.accelerationY;
-    //             }, 80);
-    //         } else if (this.speed_x <= 0) {
-    //             this.moveUp();
-    //             this.speed_y += this.accelerationY;
-    //         }
-    //     }, 1000 / 60);
-    // }
-
+    /**
+     * this function load the right movement for the bubble
+     * 
+     * @param {string} otherDirection This is the direction. true is left, false is right 
+     */
     blow(otherDirection) {
         this.setXOtherDirection(otherDirection);
         setInterval(() => {
@@ -53,6 +49,10 @@ class PoisonBubble extends MovableObject {
         }, 1000 / 60);
     }
 
+    /**
+     * This function let the bubble move right
+     * 
+     */
     blowPoisonRight() {
         this.moveRight();
         this.speed_x -= this.accelerationX;
@@ -62,6 +62,10 @@ class PoisonBubble extends MovableObject {
         }, 100);
     }
 
+    /**
+     * This function let the bubble move left
+     * 
+     */
     blowPoisonLeft() {
         this.moveLeft();
         this.speed_x -= this.accelerationX;
@@ -71,11 +75,20 @@ class PoisonBubble extends MovableObject {
         }, 100);
     }
 
+    /**
+     * This function let the bubble move up when it speed down
+     * 
+     */
     moveUpWhenPoisonSpeedDown() {
         this.moveUp();
         this.speed_y += this.accelerationY;
     }
 
+    /**
+     * This function set a new x-coordinate if the charakter looks left.
+     * So the bubble can go throw his mouth.
+     * 
+     */
     setXOtherDirection(otherDirection) {
         if (otherDirection) {
             this.x -= 200;

@@ -7,6 +7,10 @@ class EndScreenLose extends DrawableObject {
         'img/6.Botones/Tittles/Game Over/Recurso 13.png',
     ]
 
+    /**
+     * This function load the images, the size and the position from the endscreen
+     * 
+     */
     constructor() {
         super();
         this.loadImages(this.IMAGES_LOSE);
@@ -17,6 +21,10 @@ class EndScreenLose extends DrawableObject {
         this.animate();
     }
 
+    /**
+     * This function animate the endscreen
+     * 
+     */
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGES_LOSE);

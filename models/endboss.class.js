@@ -69,6 +69,10 @@ class Endboss extends MovableObject {
         'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 10.png',
     ];
 
+    /**
+     * This function load the images and the position from the endboss and start the animation
+     * 
+     */
     constructor() {
         super();
         this.loadImages(this.IMAGES_INTRO);
@@ -80,6 +84,10 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+    /**
+     * This function start the animations of the endboss
+     * 
+     */
     animate() {
         setInterval(() => this.setEndbossMovement(), 1000 / 60);
         let animateIntervall = setInterval(() => {
@@ -88,6 +96,10 @@ class Endboss extends MovableObject {
         setInterval(() => this.setFirstContact(), 100);
     }
 
+    /**
+     * This function set a variable on true when the charakter had the first contact to the endboss
+     * 
+     */
     setFirstContact() {
         try {
             if (this.x - this.world.character.x < 500 && !this.firstContact) {
@@ -99,6 +111,10 @@ class Endboss extends MovableObject {
         } catch (e) { }
     }
 
+    /**
+     * This function move and animate the endboss
+     * 
+     */
     setEndbossMovement() {
         if (this.isDead()) {
             this.speed_y = 0.8;
@@ -106,12 +122,17 @@ class Endboss extends MovableObject {
                 this.moveUp();
             }, 200);
         } else if (this.isHurt()) {
-            this.speed_x += 0.01;
+            this.speed_x += 0.005;
         } else if (this.firstContact && this.introAnimation) {
             this.moveLeft();
         };
     }
 
+    /**
+     * This function trigger the right animations
+     * 
+     * @param {string} animateIntervall This is the animation intervall for the endboss
+     */
     playEndbossAnimations(animateIntervall) {
         if (this.firstContact) {
             this.width = 500;
@@ -133,6 +154,11 @@ class Endboss extends MovableObject {
         };
     }
 
+    /**
+     * This funktion plays the first animation after first contact
+     * 
+     * @param {string} animateIntervall This is the animation intervall for the endboss
+     */
     playIntroAnimation(animateIntervall) {
         clearInterval(animateIntervall);
         let interval = setInterval(() => {
@@ -144,6 +170,10 @@ class Endboss extends MovableObject {
         }, 1000);
     }
 
+    /**
+     * This function plays the animation when the endboss get hurt
+     * 
+     */
     playEndbossIsHurtAnimation() {
         let interval = setInterval(() => {
             this.playAnimation(this.IMAGES_HURT);
@@ -153,10 +183,18 @@ class Endboss extends MovableObject {
         }, 400);
     }
 
+    /**
+     * 
+     * @returns true if the distance is under 290 px
+     */
     checkCharacterDistance() {
         return this.x - this.world.character.x < 290;
     }
 
+    /**
+     * This function create a timestamp and return that the endboss hit the charakter 1 second ago
+     * 
+     */
     isHurt() {
         let timepast = new Date().getTime() - this.lastHit;
         timepast = timepast / 1000;

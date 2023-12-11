@@ -38,6 +38,10 @@ class PufferFish extends MovableObject {
         'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3-3.png',
     ];
 
+    /**
+     * This function load the images, the random position and the random speed of the puffer fishes
+     * 
+     */
     constructor() {
         super().loadImage('img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png');
         this.x = 200 + Math.random() * 4000;
@@ -46,16 +50,23 @@ class PufferFish extends MovableObject {
         this.loadImages(this.IMAGES_SWIM_GREEN);
         this.loadImages(this.IMAGES_SWIM_ORANGE);
         this.loadImages(this.IMAGES_SWIM_RED);
-        // this.loadImages(this.IMAGES_DEAD_PUFFER);
-        this.animate(this.y);
+        this.animate();
     }
 
-    animate(y) {
+    /**
+     * This function trigger the animation and the movement
+     * 
+     */
+    animate() {
         let images = this.randomColor();
         setInterval(() => this.pufferFishMovement(), 1000 / 60);
         setInterval(() => this.pufferFishAnimation(images), 100);
     }
 
+    /**
+     * This function trigger the right movement
+     * 
+     */
     pufferFishMovement() {
         if (this.isDead()) {
             this.deadMovement();
@@ -66,6 +77,10 @@ class PufferFish extends MovableObject {
         }
     }
 
+    /**
+     * This function move the pufferfisch left and up when they are dead
+     * 
+     */
     deadMovement() {
         this.moveLeft();
         this.speed_y = 2;
@@ -77,6 +92,11 @@ class PufferFish extends MovableObject {
         }
     }
 
+    /**
+     * This function play the right animation
+     * 
+     * @param {string} images This are the Arrays of the images 
+     */
     pufferFishAnimation(images) {
         if (images == this.IMAGES_SWIM_GREEN && this.isDead()) {
             this.loadImage(this.IMAGES_DEAD_PUFFER[0]);
@@ -89,6 +109,11 @@ class PufferFish extends MovableObject {
         }
     }
 
+    /**
+     * This function randomice the color of the puffer fishes
+     * 
+     * @returns The arrays of different collor types
+     */
     randomColor() {
         let i = Math.random() * 3;
         if (i <= 1) {

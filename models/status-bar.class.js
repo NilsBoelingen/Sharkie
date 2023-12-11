@@ -6,6 +6,10 @@ class StatusBar extends DrawableObject {
 
     IMAGE = 'img/4. Marcadores/green/100_  copia 3.png';
 
+    /**
+     * This function load the images of the health bar from character
+     * 
+     */
     constructor() {
         super();
         this.loadImage(this.IMAGE);

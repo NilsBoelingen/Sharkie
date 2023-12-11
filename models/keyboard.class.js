@@ -1,3 +1,7 @@
+/**
+ * This are the keybindings for the user to interact whit the charakter
+ * 
+ */
 class Keyboard {
     UP = false;
     DOWN = false;

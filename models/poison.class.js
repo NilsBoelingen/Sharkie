@@ -20,6 +20,10 @@ class Poison extends MovableObject {
 
     ];
 
+    /**
+     * This function load the images and a random position for the poison bottles
+     * 
+     */
     constructor() {
         super();
         this.loadImages(this.IMAGES);
@@ -28,6 +32,10 @@ class Poison extends MovableObject {
         this.animate();
     }
 
+    /**
+     * This function animate the poison bottles
+     * 
+     */
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGES);

@@ -69,6 +69,10 @@ class JellyFish extends MovableObject {
         'img/2.Enemy/2 Jelly fish/Dead/Yellow/y4.png',
     ];
 
+    /**
+     * This function load the images and different positions of the jelly fishes
+     * 
+     */
     constructor() {
         super().loadImage('img/2.Enemy/2 Jelly fish/Regular damage/Lila 1.png');
         this.x = 200 + Math.random() * 4000;
@@ -85,6 +89,10 @@ class JellyFish extends MovableObject {
         this.animate();
     }
 
+    /**
+     * This function sets the animation intervalls
+     * 
+     */
     animate() {
         let images = this.randomColor();
         setInterval(() => {
@@ -106,6 +114,10 @@ class JellyFish extends MovableObject {
         }, 150);
     }
 
+    /**
+     * This function implement some physics(Water-Resistance)
+     * 
+     */
     applyWaterResistance() {
         if (this.speed_x < 0) {
             this.moveRight();
@@ -120,6 +132,11 @@ class JellyFish extends MovableObject {
         }
     }
 
+    /**
+     * This function check the collor from the dead jellyfish, to play the right dead animation
+     * 
+     * @param {string} images These are the images for the dead animation
+     */
     checkDeadAnimationType(images) {
         if (images == this.IMAGES_SWIM_GREEN) {
             this.playAnimation(this.IMAGES_DEAD_GREEN);
@@ -132,6 +149,12 @@ class JellyFish extends MovableObject {
         };
     }
 
+    /**
+     * This function make the jelly fish angry when you hit them whit normal attack.
+     * Set the status on superdangerous
+     * 
+     * @param {string} images This are the images for superdangerous
+     */
     checkJellyFishType(images) {
         if (!this.superDangerous) {
             this.playAnimation(images);
@@ -144,6 +167,11 @@ class JellyFish extends MovableObject {
         }
     }
 
+    /**
+     * This function randomice the collor
+     * 
+     * @returns The Image Array for the random color
+     */
     randomColor() {
         let i = Math.random() * 2;
         if (i <= 1) {

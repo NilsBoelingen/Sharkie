@@ -1,3 +1,7 @@
+/**
+ * In this data set, the first level is created 
+ * 
+ */
 let level1 = new Level(
     [
         new PufferFish(this.world),

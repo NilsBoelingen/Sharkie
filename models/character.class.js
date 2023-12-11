@@ -4,8 +4,8 @@ class Character extends MovableObject {
     width = 300;
     height = 300;
     world;
-    speed_x = 0;
-    speed_y = 0;
+    speed_x = 1;
+    speed_y = 1;
     speed_x_max = 10;
     speed_y_max = 4;
     offset = {
@@ -31,6 +31,28 @@ class Character extends MovableObject {
         'img/1.Sharkie/3.Swim/5.png',
         'img/1.Sharkie/3.Swim/6.png',
     ];
+
+    IMGAES_IDLE = [
+        'img/1.Sharkie/1.IDLE/1.png',
+        'img/1.Sharkie/1.IDLE/2.png',
+        'img/1.Sharkie/1.IDLE/3.png',
+        'img/1.Sharkie/1.IDLE/4.png',
+        'img/1.Sharkie/1.IDLE/5.png',
+        'img/1.Sharkie/1.IDLE/6.png',
+        'img/1.Sharkie/1.IDLE/7.png',
+        'img/1.Sharkie/1.IDLE/8.png',
+        'img/1.Sharkie/1.IDLE/9.png',
+        'img/1.Sharkie/1.IDLE/10.png',
+        'img/1.Sharkie/1.IDLE/11.png',
+        'img/1.Sharkie/1.IDLE/12.png',
+        'img/1.Sharkie/1.IDLE/13.png',
+        'img/1.Sharkie/1.IDLE/14.png',
+        'img/1.Sharkie/1.IDLE/15.png',
+        'img/1.Sharkie/1.IDLE/16.png',
+        'img/1.Sharkie/1.IDLE/17.png',
+        'img/1.Sharkie/1.IDLE/18.png',
+    ];
+
     IMAGES_ATTACK = [
         'img/1.Sharkie/4.Attack/Fin slap/1.png',
         'img/1.Sharkie/4.Attack/Fin slap/4.png',
@@ -103,9 +125,14 @@ class Character extends MovableObject {
     ];
     count = 0;
 
+    /**
+     * This function is used to load all images in the cach and start the animation function
+     * 
+     */
     constructor() {
         super().loadImage('img/1.Sharkie/3.Swim/1.png');
         this.loadImages(this.IMAGES_SWIM);
+        this.loadImages(this.IMGAES_IDLE);
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_DEAD_BY_SHOCK);
@@ -116,6 +143,11 @@ class Character extends MovableObject {
         this.animate();
     }
 
+    /**
+     * This function is used to animate the charakter
+     * 
+     * @param {string} enemy This is the enemy and its used to set the right animation on colission
+     */
     animate(enemy) {
         let intervalMove = setInterval(() => {
             this.checkMovingDirection();
@@ -129,47 +161,99 @@ class Character extends MovableObject {
             this.checkAttackType();
         }, 100);
         let interval1 = setInterval(() => {
-            if (this.characterDeadByShock()) {
-                this.clearSettedIntervalls(interval1, intervalMove, intervalAttack);
-                this.deadByShock();
-            } else if (this.characterDeadByPoison()) {
-                this.clearSettedIntervalls(interval1, intervalMove, intervalAttack);
-                this.deadByPoison();
-            } else if (this.characterHittedByPoison()) {
-                this.hittedByPoison();
-            } else if (this.characterHittedByShock()) {
-                this.hittedByShock();
-            }
+            this.playHurtAnimations(interval1, intervalMove, intervalAttack);
         }, 100);
         setInterval(() => {
-            if (this.checkKeyDownToMove() && !this.deadBy && !this.hittedBy) {
-                this.playAnimation(this.IMAGES_SWIM);
-            };
+            this.checkIdle();
         }, 200);
     }
 
+    /**
+     * This funktion is used to check that the charakter make nothing
+     * 
+     */
+    checkIdle() {
+        if (this.checkKeyDownToMove() && !this.deadBy && !this.hittedBy) {
+            this.playAnimation(this.IMAGES_SWIM);
+        } else {
+            this.playAnimation(this.IMGAES_IDLE);
+        };
+    }
+
+    /**
+     * This function is used to play the dead and hurt animations, when the charakter gets hitted
+     * 
+     * @param {string} interval1 These is the interval for the hurt and dead animations
+     * @param {string} intervalMove These is the interval for the moving animations
+     * @param {string} intervalAttack These is the interval for the Attack animations
+     */
+    playHurtAnimations(interval1, intervalMove, intervalAttack) {
+        if (this.characterDeadByShock()) {
+            this.clearSettedIntervalls(interval1, intervalMove, intervalAttack);
+            this.deadByShock();
+        } else if (this.characterDeadByPoison()) {
+            this.clearSettedIntervalls(interval1, intervalMove, intervalAttack);
+            this.deadByPoison();
+        } else if (this.characterHittedByPoison()) {
+            this.hittedByPoison();
+        } else if (this.characterHittedByShock()) {
+            this.hittedByShock();
+        }
+    }
+
+    /**
+     * This function checks whether the character died from an shock
+     * 
+     * @returns It returns true when charakter dead by shock
+     */
     characterDeadByShock() {
         return this.deadBy == 'shock' && !this.hittedBy;
     }
 
+    /**
+     * This function checks whether the character died from poison
+     * 
+     * @returns It returns true when charakter dead by poison
+     */
     characterDeadByPoison() {
         return this.deadBy == 'poison' && !this.hittedBy;
     }
 
+    /**
+     * This function checks whether the character get hitted by shock
+     * 
+     * @returns It returns true when charakter hitted by shock
+     */
     characterHittedByShock() {
         return this.hittedBy == 'shock' && !this.deadBy;
     }
 
+    /**
+     * This function checks whether the character get hitted by poison
+     * 
+     * @returns It returns true when charakter hitted by poison
+     */
     characterHittedByPoison() {
         return this.hittedBy == 'poison' && !this.deadBy;
     }
 
+    /**
+     * This function stops the intervalls when charakter is dead
+     * 
+     * @param {string} interval1 These is the interval for the hurt and dead animations
+     * @param {string} intervalMove These is the interval for the moving animations
+     * @param {string} intervalAttack These is the interval for the Attack animations 
+     */
     clearSettedIntervalls(interval1, intervalMove, intervalAttack) {
         clearInterval(interval1);
         clearInterval(intervalMove);
         clearInterval(intervalAttack);
     }
 
+    /**
+     * This function plays the animations when the charakter gets hitted by shock
+     * 
+     */
     hittedByShock() {
         let interval = setInterval(() => {
             this.playAnimation(this.IMAGES_HURT_SHOCK);
@@ -180,6 +264,10 @@ class Character extends MovableObject {
         }, 800);
     }
 
+    /**
+     * This function plays the animations when the charakter gets hitted by poison
+     * 
+     */
     hittedByPoison() {
         let interval = setInterval(() => {
             this.playAnimation(this.IMAGES_HURT_POISON);
@@ -190,6 +278,10 @@ class Character extends MovableObject {
         }, 800);
     }
 
+    /**
+     * This function plays the animations when the charakter dead by poison
+     * 
+     */
     deadByPoison() {
         let interval = setInterval(() => {
             this.playAnimation(this.IMAGES_DEAD);
@@ -203,6 +295,10 @@ class Character extends MovableObject {
         }, 2000);
     }
 
+    /**
+     * This function plays the animations when the charakter dead by poison
+     * 
+     */
     deadByShock() {
         let interval = setInterval(() => {
             this.playAnimation(this.IMAGES_DEAD_BY_SHOCK);
@@ -216,6 +312,10 @@ class Character extends MovableObject {
         }, 2000);
     }
 
+    /**
+     * This function checks charakters attack mode
+     * 
+     */
     checkAttackType() {
         if (this.world.keyboard.SPACE && !this.attackStatus) {
             this.attackTypeNormal();
@@ -228,17 +328,29 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * This function sets the normal attack animations
+     * 
+     */
     attackTypeNormal() {
         this.attackStatus = true;
         this.playAttackAnimation();
     }
 
+    /**
+     * This function sets the bubble attack animations
+     * 
+     */
     attackTypeBubble() {
         this.attackStatus = true;
         this.playBubbleAttackAnimation();
         this.world.lastThrowTime = new Date();
     }
 
+    /**
+     * This function sets the poison bubbke attack animations
+     * 
+     */
     attackTypePoisonBubble() {
         this.attackStatus = true;
         this.playPoisonBubbleAttackAnimation();
@@ -246,6 +358,10 @@ class Character extends MovableObject {
         this.world.lastThrowTime = new Date();
     }
 
+    /**
+     * This function plays the normal attack animations
+     * 
+     */
     playAttackAnimation() {
         if (this.attackStatus) {
             this.interval = setInterval(() => {
@@ -259,13 +375,23 @@ class Character extends MovableObject {
         }, 600);
     }
 
+    /**
+     * This function plays the normal attack sounds
+     * 
+     */
     playAttackSound() {
-        this.attack_sound.play();
-        setTimeout(() => {
-            this.attack_sound.pause();
-        }, 390);
+        if (!this.world.muteMusik) {
+            this.attack_sound.play();
+            setTimeout(() => {
+                this.attack_sound.pause();
+            }, 390);
+        }
     }
 
+    /**
+     * This function plays the bubble attack animations
+     * 
+     */
     playBubbleAttackAnimation() {
         if (this.attackStatus) {
             this.interval = setInterval(() => {
@@ -283,6 +409,10 @@ class Character extends MovableObject {
         }, 700);
     }
 
+    /**
+     * This function plays the poison bubble attack animations
+     * 
+     */
     playPoisonBubbleAttackAnimation() {
         if (this.attackStatus) {
             this.interval = setInterval(() => {
@@ -300,16 +430,26 @@ class Character extends MovableObject {
         }, 700);
     }
 
+    /**
+     * This function plays the bubble attack sounds
+     * 
+     */
     playBubbleSound() {
-        this.bubble_attack_sound1.play();
-        setTimeout(() => {
-            this.bubble_attack_sound2.play();
-        }, 470);
-        setTimeout(() => {
-            this.bubble_attack_sound3.play();
-        }, 880);
+        if (!this.world.muteMusik) {
+            this.bubble_attack_sound1.play();
+            setTimeout(() => {
+                this.bubble_attack_sound2.play();
+            }, 470);
+            setTimeout(() => {
+                this.bubble_attack_sound3.play();
+            }, 880);
+        }
     }
 
+    /**
+     * This function checks whether the final boss has been defeated
+     * 
+     */
     checkWinGame() {
         setInterval(() => {
             this.world.enemies.forEach((enemy) => {
@@ -322,6 +462,12 @@ class Character extends MovableObject {
         }, 100);
     }
 
+    /**
+     * This function sets the damage for the nomal attack
+     * 
+     * @param {*} enemy 
+     * @returns 
+     */
     characterDamage(enemy) {
         if (enemy instanceof PufferFish) {
             return 100;
@@ -330,6 +476,11 @@ class Character extends MovableObject {
         };
     }
 
+    /**
+     * This function checks whether the character was hit by poison or shock and died 
+     * 
+     * @param {string} enemy This is the enemy, that hit the charakter
+     */
     checkHittedBy(enemy) {
         if (this.isDead() && this.lastHitfromSuperDangerous) {
             this.deadBy = 'shock';
@@ -342,10 +493,19 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * This function checks, that the user push a key
+     * 
+     * @returns True when user push a button
+     */
     checkKeyDownToMove() {
         return this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN;
     }
 
+    /**
+     * This function let the charakter move in the right direction
+     * 
+     */
     checkMovingDirection() {
         if (this.isMoveRight()) {
             this.checkMoveRight();
@@ -361,22 +521,46 @@ class Character extends MovableObject {
         };
     }
 
+    /**
+     * This function checks the user input and whether the end of the level has been reached 
+     * 
+     * @returns True when the user push a key and the charakter is not at the end of level
+     */
     isMoveRight() {
         return this.world.keyboard.RIGHT && this.x < this.world.level.level_end_right;
     }
 
+    /**
+     * This function checks the user input and whether the end of the level has been reached 
+     * 
+     * @returns True when the user push a key and the charakter is not at the end of level
+     */
     isMoveLeft() {
         return this.world.keyboard.LEFT && this.x > this.world.level.level_end_left;
     }
 
+    /**
+     * This function checks the user input and whether the end of the level has been reached 
+     * 
+     * @returns True when the user push a key and the charakter is not at the end of level
+     */
     isMoveUp() {
         return this.world.keyboard.UP && this.y > this.world.level.level_end_up;
     }
 
+    /**
+     * This function checks the user input and whether the end of the level has been reached 
+     * 
+     * @returns True when the user push a key and the charakter is not at the end of level
+     */
     isMoveDown() {
         return this.world.keyboard.DOWN && this.y < this.world.level.level_end_down;
     }
 
+    /**
+     * This function move the charakter right
+     * 
+     */
     checkMoveRight() {
         if (this.speed_x < this.speed_x_max) {
             this.applyWaterResistanceX();
@@ -388,6 +572,10 @@ class Character extends MovableObject {
         this.world.bubbles.otherDirection = false;
     }
 
+    /**
+     * This function move the charakter left
+     * 
+     */
     checkMoveLeft() {
         if (this.speed_x < this.speed_x_max) {
             this.applyWaterResistanceX();
@@ -399,6 +587,10 @@ class Character extends MovableObject {
         this.world.bubbles.otherDirection = true;
     }
 
+    /**
+     * This function move the charakter up
+     * 
+     */
     checkMoveUp() {
         if (this.speed_y < this.speed_y_max) {
             this.applyWaterResistanceY();
@@ -408,6 +600,10 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * This function move the charakter down
+     * 
+     */
     checkMoveDown() {
         if (this.speed_y < this.speed_y_max) {
             this.applyWaterResistanceY();

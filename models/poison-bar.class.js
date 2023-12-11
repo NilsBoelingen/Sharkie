@@ -6,6 +6,10 @@ class PoisonBar extends DrawableObject {
 
     IMAGE = 'img/4. Marcadores/green/100_ copia 5.png';
 
+    /**
+     * This function load the images for the poison bar
+     * 
+     */
     constructor() {
         super();
         this.loadImage(this.IMAGE);

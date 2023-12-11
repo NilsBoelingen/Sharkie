@@ -15,6 +15,10 @@ class Coin extends MovableObject {
         'img/4. Marcadores/1. Coins/4.png',
     ];
 
+    /**
+     * This functions loads the coin images and give them different positions
+     * 
+     */
     constructor() {
         super();
         this.loadImages(this.IMAGES);
@@ -23,6 +27,10 @@ class Coin extends MovableObject {
         this.animate();
     }
 
+    /**
+     * This function animate the coins
+     * 
+     */
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGES);

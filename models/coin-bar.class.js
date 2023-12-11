@@ -6,6 +6,10 @@ class CoinBar extends DrawableObject {
 
     IMAGE = 'img/4. Marcadores/green/100_ copia 6.png';
 
+    /**
+     * This function load the coinbar image
+     * 
+     */
     constructor() {
         super();
         this.loadImage(this.IMAGE);
