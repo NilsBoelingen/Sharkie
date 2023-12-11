@@ -447,27 +447,12 @@ class World {
      */
     playMusik() {
         setInterval(() => {
-            if (!this.gameStarted && !this.muteMusik) {
-                this.playIntroMusik();
-            } else if (this.gameStarted && !this.muteMusik) {
+            if (this.gameStarted && !this.muteMusik) {
                 this.playGameMusik();
             } else if (this.muteMusik) {
                 this.muteAllMusik();
             }
         }, 100);
-    }
-
-    /**
-     * This function plays the intromusik
-     * 
-     */
-    playIntroMusik() {
-        try {
-        this.game_musik.pause();
-        this.intro_musik.play();
-        this.intro_musik.volume = 0.3;
-        this.intro_musik.loop = true;
-        } catch (e) {}
     }
 
     /**
