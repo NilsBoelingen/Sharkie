@@ -280,7 +280,7 @@ img {
 
 @media only screen and (max-height: 1079px) {
     .instructions-container {
-        display: none;
+        display: flex;
     }
 }
 
@@ -293,6 +293,22 @@ img {
 @media only screen and (max-height: 900px) {
     h1 {
         display: none;
+    }
+}
+
+@media only screen and (max-height: 840px) {
+    body {
+        justify-content: flex-start;
+    }
+}
+
+@media only screen and (max-height: 650px) {
+    .instructions-container {
+        display: none;
+    }
+    
+    body {
+        justify-content: center;
     }
 }
 
